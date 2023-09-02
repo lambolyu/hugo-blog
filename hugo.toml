@@ -1,0 +1,88 @@
+baseURL = "https://lambo.tw/"
+languageCode = "zh-Hants-TW"
+title = "lambo"
+theme = "PaperMod"
+paginate = 15
+enableInlineShortcodes = true
+enableRobotsTXT = true
+hasCJKLanguage = true
+isCJKLanguage = true
+enableEmoji = true
+pygmentsUseClasses = true
+
+[minify]
+disableXML = true
+
+[outputs]
+home = [ "HTML", "RSS", "JSON" ]
+
+[permalinks]
+posts = "/:year/:month/:slug/"
+
+[params]
+env = "production"
+description = "紀錄使用python和php等多種程式處理醫院藥庫的日常工作情形。"
+keyword = [
+  "python",
+  "php",
+  "hospital",
+  "pharmacy",
+  "stock",
+  "inventory",
+  "pharmacist"
+]
+author = "lambo"
+defaultTheme = "auto"
+dateFormat = "2006 / 1 / 2"
+ShowReadingTime = true
+ShowWordCount = true
+ShowPostNavLinks = true
+ShowBreadCrumbs = true
+ShowCodeCopyButtons = true
+
+[params.homeInfoParams]
+Title = "lambo"
+Content = """
+記錄一些利用 python、PHP 等寫出的小工具處理醫院藥庫的日常工作情形。
+"""
+
+[[params.socialIcons]]
+name = "facebook"
+url = "https://www.facebook.com/lambo.lyu/"
+
+[[params.socialIcons]]
+name = "instagram"
+url = "https://www.instagram.com/lambolyu/"
+
+[params.assets]
+disableHLJS = true
+
+[markup.goldmark.renderer]
+unsafe = true
+
+[markup.highlight]
+noClasses = false
+
+[[menu.main]]
+identifier = "archives"
+name = "文章列表"
+url = "/archives/"
+weight = 10
+
+[[menu.main]]
+identifier = "tags"
+name = "標籤"
+url = "/tags/"
+weight = 30
+
+[[menu.main]]
+identifier = "categories"
+name = "分類"
+url = "/categories/"
+weight = 40
+
+[[menu.main]]
+identifier = "home"
+name = "首頁"
+url = "/"
+weight = 0
