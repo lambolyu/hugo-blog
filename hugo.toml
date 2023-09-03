@@ -1,4 +1,4 @@
-baseURL = "https://lambo.tw/"
+baseURL = "https://lambolyu.netlify.app/"
 languageCode = "zh-Hants-TW"
 title = "lambo"
 theme = "PaperMod"
