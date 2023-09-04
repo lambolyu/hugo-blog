@@ -1,6 +1,6 @@
 baseURL = "https://lambolyu.netlify.app/"
 languageCode = "zh-Hants-TW"
-title = "lambo"
+title = "Lambo’s Work Log"
 theme = "PaperMod"
 paginate = 15
 enableInlineShortcodes = true
@@ -9,6 +9,7 @@ hasCJKLanguage = true
 isCJKLanguage = true
 enableEmoji = true
 pygmentsUseClasses = true
+defaultContentLanguage = 'zh-tw'
 
 [minify]
 disableXML = true
@@ -33,7 +34,7 @@ keyword = [
 ]
 author = "lambo"
 defaultTheme = "auto"
-dateFormat = "2006 / 1 / 2"
+dateFormat = "2006/1/2"
 ShowReadingTime = true
 ShowWordCount = true
 ShowPostNavLinks = true
@@ -41,9 +42,11 @@ ShowBreadCrumbs = true
 ShowCodeCopyButtons = true
 
 [params.homeInfoParams]
-Title = "lambo"
+Title = "Lambo's Work Log"
 Content = """
-記錄一些利用 python、PHP 等寫出的小工具處理醫院藥庫的日常工作情形。
+某醫院藥庫日常工作的程式紀錄<br>
+很多的 Python 加上一點點麵條式 PHP<br>
+完全不管程式效率和邏輯，可以用就好的自學者 (？)
 """
 
 [[params.socialIcons]]
