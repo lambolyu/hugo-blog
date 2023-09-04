@@ -31,7 +31,17 @@ keyword = [
   "pharmacy",
   "stock",
   "inventory",
-  "pharmacist"
+  "pharmacist",
+  "醫院",
+  "藥庫",
+  "藥師",
+  "藥學部",
+  "藥劑",
+  "庫存管理",
+  "請購",
+  "庫管",
+  "安全量",
+  "基準量"
 ]
 author = "lambo"
 defaultTheme = "auto"
