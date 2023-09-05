@@ -8,7 +8,6 @@ enableRobotsTXT = true
 hasCJKLanguage = true
 isCJKLanguage = true
 enableEmoji = true
-pygmentsUseClasses = true
 defaultContentLanguage = 'zh-tw'
 googleAnalytics = 'G-58BLPMJTXE'
 
@@ -72,14 +71,17 @@ url = "https://www.instagram.com/lambolyu/"
 name = "email"
 url = "mailto:lambolyu@gmail.com"
 
+pygmentsUseClasses = true
+
 [params.assets]
 disableHLJS = true
 
-[markup.goldmark.renderer]
-unsafe = true
-
 [markup.highlight]
-noClasses = false
+#noClasses = false
+codeFences = true
+guessSyntax = true
+lineNos = false
+style = "monokai"
 
 [[menu.main]]
 identifier = "archives"
@@ -104,3 +106,8 @@ identifier = "home"
 name = "首頁"
 url = "/"
 weight = 0
+
+[sitemap]
+changeFreq = "daily"
+filename = "sitemap.xml"
+priority = -1
