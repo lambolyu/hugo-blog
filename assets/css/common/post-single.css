@@ -303,8 +303,7 @@
 }
 
 .post-tags a,
-.share-buttons,
-.paginav {
+.share-buttons{
     border-radius: var(--radius);
     background: var(--code-bg);
     border: 1px solid var(--border);
@@ -320,8 +319,7 @@
     background: var(--code-bg);
 }
 
-.post-tags a:hover,
-.paginav a:hover {
+.post-tags a:hover{
     background: var(--border);
 }
 
@@ -372,11 +370,6 @@ h6:hover .anchor {
     text-transform: uppercase;
     font-size: small;
     color: var(--secondary);
-}
-
-.paginav .prev,
-.paginav .next {
-    width: 50%;
 }
 
 .paginav span:hover:not(.title) {

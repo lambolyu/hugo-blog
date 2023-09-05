@@ -68,6 +68,10 @@ url = "https://www.facebook.com/lambo.lyu/"
 name = "instagram"
 url = "https://www.instagram.com/lambolyu/"
 
+[[params.socialIcons]]
+name = "email"
+url = "mailto:lambolyu@gmail.com"
+
 [params.assets]
 disableHLJS = true
 

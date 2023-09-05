@@ -1,0 +1,10 @@
+{{- $icon_name := ( trim .name " " | lower )}}
+{{- if (eq $icon_name "facebook") -}}
+    <i class="fa-brands fa-facebook fa-2x fa-fw"></i>
+{{- else if (eq $icon_name "instagram") -}}
+    <i class="fa-brands fa-instagram fa-2x fa-fw"></i>
+{{- else if (eq $icon_name "email") -}}
+    <i class="fa-regular fa-envelope fa-2x fa-fw"></i>
+{{- else if $icon_name -}}
+    <i class="fa-solid fa-link fa-2x fa-fw"></i>
+{{- end -}}
