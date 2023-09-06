@@ -9,7 +9,7 @@ hasCJKLanguage = true
 isCJKLanguage = true
 enableEmoji = true
 defaultContentLanguage = 'zh-tw'
-#googleAnalytics = 'G-58BLPMJTXE'
+googleAnalytics = 'G-58BLPMJTXE'
 
 [minify]
 disableXML = true
