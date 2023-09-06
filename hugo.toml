@@ -9,7 +9,7 @@ hasCJKLanguage = true
 isCJKLanguage = true
 enableEmoji = true
 defaultContentLanguage = 'zh-tw'
-googleAnalytics = 'G-58BLPMJTXE'
+#googleAnalytics = 'G-58BLPMJTXE'
 
 [minify]
 disableXML = true
@@ -54,8 +54,10 @@ ShowCodeCopyButtons = true
 [params.homeInfoParams]
 Title = "Lambo's Work Log"
 Content = """
-某醫院藥庫日常工作的程式紀錄<br>
-很多的 Python 加上一點點麵條式 PHP<br>
+某醫院藥庫日常工作的程式紀錄
+
+很多的 Python 加上一點點麵條式 PHP
+
 完全不管程式效率和邏輯，可以用就好的自學者 (？)
 """
 
