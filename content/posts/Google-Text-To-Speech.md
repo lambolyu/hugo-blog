@@ -145,8 +145,104 @@ with open('儲存的檔名.mp3', 'wb') as mp3:
 ```powershell
 pip install pydub
 ```
+同時要記得安裝 [ffmpeg](https://ffmpeg.org/) 讓 pydub 可以處理 mp3 檔案。
+### ffmpeg
+官網找到 windows 版本的下載位置，還有分成 shared 版跟完整版， shared 版本的檔案比較小，因為編譯出來的 exe 不包含所有的 dll 。為了節省不必要的麻煩，選擇下載完整版的：
+![Download Ffmepg](/images/2023-09-ffmepg-dl.png#center)
+下載完成的檔案解壓縮到指定位置後，必須將 bin 資料夾的路徑加到 Windows 的環境變數中。也就是說要直接 Powershell 或 cmd 視窗中輸入 ffmepg 指令就可以執行程式。
 
+開啟系統內容，可以在我的電腦圖示上按下滑鼠右鍵點內容；或是按下 `Win鍵 + R` 並輸入 sysdm.cpl ，並點選 「 進階 」 的頁籤：
+![Insert Environment Variables](/images/2023-09-envvar-setting-01.png#center)
+按下 「 環境變數 」 按鈕：
+![Insert Environment Variables](/images/2023-09-envvar-setting-02.png#center)
+在 「 系統變數 」 的方框中，找到 Path 的變數，按下編輯：
+![Insert Environment Variables](/images/2023-09-envvar-setting-03.png#center)
+接著在編輯環境變數的視窗中點選 「 新增 」 ，並輸入剛剛解壓縮後的 ffmepg\bin 資料夾的路徑，例如： `C:\ffmepg\bin` 。
+![Insert Environment Variables](/images/2023-09-envvar-setting-04.png#center)
+新增完畢後一路點選確定或套用離開設定視窗。
+### pydub
+pydub 算是個很好操作音檔的 python 函式庫，先上[官方文件](http://pydub.com/)。
+
+首先建立一段音檔，因為 google 合成的語音開始的太直接，有時候受限於硬體或 html 播放的效能，從第一秒後才開始有聲音。因此需要建立一個空白的開頭，接著才撥放語音：
+```python
+from pydub import AudioSegment
+voice = AudioSegment.empty()
+voice += AudioSegment.silent(duration=500) #單位是毫秒，1000=1秒
+```
+接著播放英文語音：
+```python
+voice += AudioSegment.from_file('英文.mp3', format='mp3')
+```
+加一段空白，再撥放中文語音：
+```python
+voice += AudioSegment.silent(duration=3000)
+voice += AudioSegment.from_file('中文.mp3', format='mp3')
+```
+調整音量：
+```python
+voice += 10 #單位為分貝 dB ，也可以用減的
+```
+輸出檔案：
+```python
+voice.export(f'路徑\\檔名.mp3', format='mp3')
+```
+如此就完成中英文語音的合併了，如果想要合併特殊音效也可以下載後匯入，只是要注意免費音效的使用所有權。
 ***
 ## 利用 DataFrames 批次輸出語音
+把剛剛下載 google 語音合成的程式碼，和 pydub 的程式碼全部包成一個函式，並且指定檔名為藥品代碼：
+```python
+def make_voice(code, en_drug_name, zh_drug_name):
+    ...
+    voice.export(f'路徑\\{code}.mp3', format='mp3')
+```
+用 Pandas 把藥品品項檔讀成 DataFrame ，清理資料避免**特殊符號**干擾 google 發音，再利用 `iterrows()` 的方法迭代 DataFrame ：
+```python
+import pandas as pd
+df = pd.read_csv('藥品品項檔.csv')
+#進行適當的資料清理，我這邊是直接重新整理清單，因為醫院的藥品檔基本上無法拿來用...
+for _,row in df.iterrows():
+    if (row['en_name']!='') | (row['zh_name']!=''):
+        make_voice(row['code'],row['en_name'],row['zh_name'])
+```
+就可以一口氣把所有醫院裡面的藥品全部請 google 念一次了！
 ***
-## 加碼：台語
+## 台語 (tâi-gí)
+最一開始規劃發音的時候，其實是想要做中英日台四個語言的，日文也可以利用 google 完成，惟獨台語比較傷腦筋。
+
+2022 年初有找到一個搜尋中文翻譯成台語的發音網站，就利用 `requests` 模擬搜尋，將結果重新丟進網頁裡面直接下載發音：
+```python
+import requests
+import json
+search = requests.post('https://hokbu.ithuan.tw/tau', data = {'taibun':zh_name})
+kip = json.loads(search.text)['KIP']
+response = requests.get('https://hapsing.ithuan.tw/bangtsam', params = {'taibun':kip})
+if response.status_code == 200:
+    with open('tw.mp3', mode ='wb') as f:
+        f.write(response.content)
+```
+沒想到這個網站在 2023 年 9 月的現在已經徹底消失了，現在比較熱門的線上台語辭典，例如 [iTaigi 愛台語](https://itaigi.tw/k/)或是[教育部臺灣閩南語常用詞辭典](
+https://sutian.moe.edu.tw/zh-hant/)都無法直接丟中文進去硬翻，因為藥品的中文名稱是專有名詞，不是日常生活辭彙，第一關就找不到結果了。
+
+另外一個方法是把藥品當成人名來查詢發音，利用[教育部臺灣閩南語常用詞辭典](https://sutian.moe.edu.tw/zh-hant/huliok/miasenn/)，不過文字上限只有五個中文。
+
+先安裝 BeautifulSoup4 函式庫來解析 html 字串：
+```powershell
+pip install beautifulsoup4
+```
+接著就開始來抓台語的語音檔：
+```python
+import requests
+from bs4 import BeautifulSoup
+tw_name = '伯基'
+search = requests.get(f'https://sutian.moe.edu.tw/zh-hant/huliok/miasenn/?mia={tw_name}')
+soup = BeautifulSoup(search.text, 'lxml')
+results = soup.select_one('div.app-miasenn-liamhuat>button')
+if results:
+    response = requests.get(results['data-src'])
+    with open('tw.mp3', mode ='wb') as f:
+        f.write(response.content)
+```
+
+後來發現藥品的名稱幾乎都是廠商音譯兼義譯的中文字，在這種情形下，台文卻無法很適切的對應到藥品音義。實際上藥師和病人進行藥品衛教的時候，也並沒有什麼使用台語直接照翻藥品名稱的機會，大部分的台語衛教都是直接用台語向病人介紹該藥品的作用，而不是名字。
+
+所以索性放棄的台語的發音，連同日文也一起拉掉，最後剩下中文和英文。
