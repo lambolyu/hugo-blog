@@ -229,15 +229,17 @@ https://sutian.moe.edu.tw/zh-hant/)都無法直接丟中文進去硬翻，因為
 ```powershell
 pip install beautifulsoup4
 ```
-接著就開始來抓台語的語音檔：
+接著就直接抓台語的語音檔：
 ```python
 import requests
 from bs4 import BeautifulSoup
 tw_name = '伯基'
 search = requests.get(f'https://sutian.moe.edu.tw/zh-hant/huliok/miasenn/?mia={tw_name}')
 soup = BeautifulSoup(search.text, 'lxml')
+# 用 BeautifulSoup 解析 html 字串，並找到第一個 <div class="app-miasenn-liamhuat"> <button>
 results = soup.select_one('div.app-miasenn-liamhuat>button')
 if results:
+    # 將 <buttom data-src="..."> 的 ... 取出，並下載
     response = requests.get(results['data-src'])
     with open('tw.mp3', mode ='wb') as f:
         f.write(response.content)
