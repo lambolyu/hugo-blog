@@ -44,16 +44,17 @@
 }
 
 .post-content h1 {
-    margin: 40px auto 32px;
+    margin: 60px auto 32px;
     font-size: 40px;
 }
 
 .post-content h2 {
-    margin: 32px auto 24px;
+    margin: 60px auto 24px;
     font-size: 32px;
 }
 
 .post-content h3 {
+    margin: 60px auto 24px;
     font-size: 24px;
 }
 
@@ -91,6 +92,12 @@
 .post-content p,
 .post-content figure,
 .post-content ul {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.post-content blockquote p {
+    margin-top: 0px;
     margin-bottom: var(--content-gap);
 }
 
@@ -101,6 +108,7 @@
 
 .post-content li {
     margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .post-content li p {
@@ -224,7 +232,7 @@
 }
 
 .post-content hr {
-    margin: 30px 0;
+    margin: 50px 0;
     height: 2px;
     background: var(--tertiary);
     border: 0;
@@ -268,6 +276,10 @@
     padding: 0.4em;
 }
 
+.toc-container {
+    margin: 30px 2px 40px 2px;
+}
+
 .dark .toc {
     background: var(--entry);
 }
@@ -292,6 +304,7 @@
 }
 
 .toc li ul {
+    margin-top: 5px;
     margin-inline-start: var(--gap);
 }
 
