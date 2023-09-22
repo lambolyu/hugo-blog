@@ -43,7 +43,8 @@ keyword = [
   "基準量"
 ]
 author = "lambo"
-defaultTheme = "auto"
+defaultTheme = "light"
+disableThemeToggle = true
 dateFormat = "2006/1/2"
 ShowReadingTime = true
 ShowWordCount = true
