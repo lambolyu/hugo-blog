@@ -66,11 +66,15 @@ Title = "懶誌 lamzy"
 Content = """
 Hi, I'm Lambo, a pharmacist of hospital in Taiwan.
 
-Here's a portion of my work log from my warehouse business, with the majority of tasks involving coding and data analysis
+Here's a portion of my work log from my warehouse business, 
+
+with the majority of tasks involving coding and data analysis
 
 嗨，我是 Lambo ，台灣某間醫院的藥庫藥師。
 
-這裡面是一些為了滿足工作需求而自學的程式概念和程式碼說明，主要使用了 Python 和 PHP 兩種語言。
+這裡面是一些為了滿足工作需求而自學的程式概念和程式碼說明，
+
+主要使用了 Python 和 PHP 兩種語言。
 """
 
 [[params.socialIcons]]
