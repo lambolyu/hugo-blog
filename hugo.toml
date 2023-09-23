@@ -1,6 +1,6 @@
 baseURL = "https://lambolyu.netlify.app/"
 languageCode = "zh-Hants-TW"
-title = "Lambo’s Work Log"
+title = "懶誌 lamzy"
 theme = "PaperMod"
 paginate = 15
 enableInlineShortcodes = true
@@ -62,13 +62,15 @@ disableHLJS = true
 #safari_pinned_tab = "/favicon.svg"
 
 [params.homeInfoParams]
-Title = "Lambo's Work Log"
+Title = "懶誌 lamzy"
 Content = """
-某醫院藥庫日常工作的程式紀錄
+Hi, I'm Lambo, a pharmacist of hospital in Taiwan.
 
-很多的 Python 加上一點點麵條式 PHP
+Here's a portion of my work log from my warehouse business, with the majority of tasks involving coding and data analysis
 
-完全不管程式效率和邏輯，可以用就好的自學者 (？)
+嗨，我是 Lambo ，台灣某間醫院的藥庫藥師。
+
+這裡面是一些為了滿足工作需求而自學的程式概念和程式碼說明，主要使用了 Python 和 PHP 兩種語言。
 """
 
 [[params.socialIcons]]
