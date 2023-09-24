@@ -64,7 +64,7 @@ disableHLJS = true
 [params.homeInfoParams]
 Title = "懶誌 lamzy"
 Content = """
-Hi, I'm Lambo, a pharmacist of hospital in Taiwan.
+Hi, I'm Lambo, a pharmacist at a hospital in Taiwan.
 
 Here's my work log from warehouse business, with the tasks involving coding and data analysis.
 
