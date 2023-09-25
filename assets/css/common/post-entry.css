@@ -12,16 +12,18 @@
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 3;
+    padding-bottom: 14px;
+    border-bottom: 1px dashed #CCC;
 }
 
 .first-entry .entry-header h1 {
     font-size: 34px;
-    line-height: 1.3;
+    line-height: 1.4;
 }
 
 .first-entry .entry-content {
-    border-top: 2px solid #CCC;
     padding-top : 14px;
+    padding-bottom: 14px;
     margin: 14px 0;
     font-size: 16px;
     -webkit-line-clamp: 3;
@@ -62,7 +64,7 @@
     margin: 8px 0;
     color: var(--secondary);
     font-size: 14px;
-    line-height: 1.6;
+    line-height: 2.2;
     overflow: hidden;
     display: -webkit-box;
     -webkit-box-orient: vertical;
