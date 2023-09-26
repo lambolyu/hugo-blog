@@ -9,6 +9,7 @@ hasCJKLanguage = true
 isCJKLanguage = true
 enableEmoji = true
 defaultContentLanguage = 'zh-tw'
+summaryLength = 100
 googleAnalytics = 'G-58BLPMJTXE'
 
 [minify]
@@ -64,7 +65,7 @@ disableHLJS = true
 [params.homeInfoParams]
 Title = "懶誌 lamzy"
 Content = """
-Hi, I'm Lambo, a pharmacist at a hospital in Taiwan.
+Hi, I'm Lambo, a pharmacist at a hospital in Taiwan.{{< i class="twicon-main-island" >}}
 
 Here's my work log from warehouse business, with the tasks involving coding and data analysis.
 
@@ -72,6 +73,7 @@ Here's my work log from warehouse business, with the tasks involving coding and 
 
 這裡面是一些為了工作需求而自學的程式紀錄，以 Python 和 PHP 為主。
 """
+
 
 [[params.socialIcons]]
 name = "facebook"
