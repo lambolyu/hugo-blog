@@ -36,7 +36,7 @@ tags = []
 
 後來實作了一陣子發現了一些優點但也發現了缺點，列舉如下：
 ### 優點
-- 可以自訂機器人的大頭貼圖片和名稱
+- 可以自訂機器人的顯示圖片和名稱
 - 具有後台可以不用寫程式就可以自動回應加入好友通知和自動以 AI 回應字句
 - 具有後台可以觀看被加好友、回應次數等視覺化的圖表
 - 除了 Messaging API ，還有更多例如商家集點、連結 Line Pay 服務等功能
@@ -62,6 +62,242 @@ Heroku **當時**的免費方案是超過 30 分鐘沒有使用會進入休眠�
 ***
 ## Line Notify
 ![Line Notify](/images/2023-10-linenotify.png#center)
+替代方案就是 Line 提供的另外一項免費的服務： Line Notify ，說明文件請參考[這裡](https://notify-bot.line.me/doc/en/)。
+
+有別於 Line Bot ， Line Notify 本身沒有後台可以觀看數據，無法更改顯示圖片和名稱，名稱會預設以【○○○】夾註並在後面顯示推送的訊息。
+
+![Line Notify Preview](/images/2023-10-linenotify-preview.png#center)
+
+而且 Line Notify 只能發送訊息，無法得知對方回覆了什麼，也無法抓過去的對話。但是對於傳送布告訊息用途卻已經足夠了。
+
+### 1. 登入 Line 帳號
+![login line account](/images/2023-10-linenotify-0.png#center)
+點選右上角登入自己個人的 Line 帳號，這個帳號是個人名義或其他名義登錄的都沒有差別，不會在任何地方顯示出來。
+
+### 2. 管理登錄服務
+![管理登錄服務](/images/2023-10-linenotify-1.png#center)
+選擇管理登錄服務。
+
+這個選項會有一點小複雜，以下的步驟以 PHP 為例，其他還有搭配 ngrok 的例子，可以參考 The Will Will Web 保哥的[文章](https://blog.miniasp.com/post/2020/02/17/Go-Through-LINE-Notify-Without-Any-Code)。
+
+首先要找到或是建立網頁伺服器，無法連接外網也無所謂，如果使用 PHP ，最簡單的方法應該是使用 [XAMPP](https://www.apachefriends.org/) 來快速建立伺服器環境，相關的教學內容可以自行 Google ，最後在瀏覽器上輸入 `http://localhost/` 或是 `http://127.0.0.1/` 可以指向某個資料夾裡的網頁。
+
+藥庫本身的布告欄是架在院內的某台伺服器上，因此可以直接挪用伺服器空間。
+
+#### A. 填寫資料完成取得 Client ID 和 Client Secret
+![管理登錄服務](/images/2023-10-linenotify-2.png#center)
+選擇管理登錄服務後，進入到填寫資料的畫面，這邊所有的空格都是必填的。比較重要的項目其實只有三個，其他的項目最後都不會公開。
+- 服務名稱：【○○○】內的文字
+- 電子郵件帳號：該步驟完成後 Line 會寄認證信要求完成認證
+- Callback URL：這個可以先亂填一個 http 開頭的網址
+
+寫錯或是亂寫都沒有關係，這些資訊之後都可以隨時更改。寫完之後前往下一步。
+
+![管理登錄服務](/images/2023-10-linenotify-4.png#center)
+再次確認資訊，按下登錄。
+
+![管理登錄服務](/images/2023-10-linenotify-5.png#center)
+回到自己的信箱點選認證信，再點選前往服務一覽。
+
+![管理登錄服務](/images/2023-10-linenotify-6.png#center)
+點選剛剛建立的服務，可以取得 Client ID 和 Client Secret 。
+
+![管理登錄服務](/images/2023-10-linenotify-6-1.png#center)
+　
+#### B. 製作 Call Back 頁面
+接著來製作讓 Line Notify 認證回傳的頁面。
+
+根據說明文件，中間藍色的 YOUR SITE 就是我們要製作的頁面。
+![linenotify oauth flow](https://scdn.line-apps.com/n/line_notice/img/pc/img_api_document1.png#center)
+
+當我們向 Line Notify 認證的 API 發出請求並選擇特定群組的時候，該 API 會重新導向我們指定的 CallBack URL ，並用 POST 方法發送參數給 CallBack URL 。
+
+而我們必須使用剛剛拿到的參數，再次 POST 給另外一個 Line Notify API ，以此拿到特定群組的 Access Token 。
+
+聽不懂沒關係，網頁的原始碼如下，抄起來貼上，改一下上面的 const ，然後把檔案名稱存成 callback.php 放在伺服器根目錄中：
+```php
+<?php
+// client id
+const CLIENT_ID = '';
+// client secret
+const CLIENT_SECRET = '';
+// callback URL，連到這一頁的網址名稱
+const AUTH_PAGE_URL = '';
+
+if(isset($_POST['code'])) {
+    $ch = curl_init();
+    curl_setopt_array($ch, [
+        CURLOPT_URL => 'https://notify-bot.line.me/oauth/token',
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_POST => true,
+        CURLOPT_POSTFIELDS => [
+            'grant_type' => 'authorization_code',
+            'code' => $_POST['code'],
+            'redirect_uri' => AUTH_PAGE_URL,
+            'client_id' => CLIENT_ID,
+            'client_secret' => CLIENT_SECRET
+        ],
+        CURLOPT_SSL_VERIFYHOST => 0,
+        CURLOPT_SSL_VERIFYPEER => 0,
+    ]);
+    $body = curl_exec($ch);
+    $code = curl_getinfo($ch,  CURLINFO_RESPONSE_CODE);
+    curl_close($ch);
+
+    if($code===200) {
+        $json=json_decode($body, true);
+        echo 'access_token: '.(isset($json['access_token']) ? $json['access_token'] : 'null');
+    } else {
+        echo '無法取得 access_token';
+    }
+
+} elseif(isset($_POST['error']) && isset($_POST['error_description'])) {
+    exit($_POST['error'].'<br>'.$_POST['error_description']);
+} else {
+    exit('未知的錯誤');
+}
+```
+#### C. 修改剛剛資料頁中的 Callback URL
+這邊要跟剛剛頁面上定義的常數值要一模一樣，要檢查 http 後面有沒有 s ，網誌後面有沒有 / 等等。
+![管理登錄服務](/images/2023-10-linenotify-6-2.png#center)
+#### D. 完成 OAuth2 認證取得群組的 Access Token
+複製下面的網址，並更改網址中的資訊，貼到瀏覽器上，利用 GET 方法發送請求給 API 。
+```
+https://notify-bot.line.me/oauth/authorize?response_type=code&scope=notify&state=0&client_id=&redirect_uri=
+```
+- 在 `client_id=` 和 `&` 之間放上自己申請的 client id
+- 在 `redirect_uri=` 之後放上 `http://localhost/callback.php` 或自己的 Callback URL
+
+如果連到這一頁，表示第一步驟成功了！在頁面上選擇想讓 Line Notify 傳送訊息 (連動) 到哪個群組，這裡的選項只有設定人自己跟設定人存在的群組而已，不過取得 Access Token 之後，設定人可以退出群組， Line Notify 依舊會有作用。
+![管理登錄服務](/images/2023-10-linenotify-7.png#center)
+
+按下按鈕後，瀏覽器的網址就會跑回 `http://localhost/callback.php` ，並在該頁面上顯示該群組的 `access_token` ，請小心保存下來，這個 Token 只會顯示這一次，如果不小心遺失了就必須重新發行一次。
+
+### 2. 個人頁面
+如果上面的流程太複雜了，那來試試這個。
+
+回到剛剛登入 Line 之後，這次改選個人頁面。
+![開發人員用存取權杖](/images/2023-10-linenotify-8.png#center)
+
+拉到網頁最下面發行開發人員用的存取權杖。
+![開發人員用存取權杖](/images/2023-10-linenotify-9.png#center)
+#### A. 填寫資料完成取得 Access Token
+接著填入自訂的權杖名稱【○○○】，選擇想讓 Line Notify 傳送訊息 (連動) 到哪個群組，點選發行。
+![開發人員用存取權杖](/images/2023-10-linenotify-10.png#center)
+
+這樣 Access Token 就出現了。是不是有夠簡單？
+![開發人員用存取權杖](/images/2023-10-linenotify-11.png#center)
+
+#### B. 管理登錄服務 vs 個人頁面
+那為什麼要選擇**管理登錄服務**，捨近求遠往艱難的路走去呢？
+差別在於後續能不能改名稱，也就是【○○○】。如果使用個人頁面發行存取權杖，權杖名稱【○○○】發行當下就決定了，日後無法更改，如果需要更改就必須重新發行一次。而管理登錄服務，則可以隨時變更名稱，甚至可以利用同一個登錄服務發行多個群組的權杖，名稱統一管理也比較有一致性。
+
+講了很多優點，我個人還是覺得個人頁面直接發行單一次權杖好用很多。不過因為本院的有些群組涉及機密或考慮其他管理上的層面，部分主管不喜歡額外的人員 (例如我) 留在他們的群組中，但又必須將藥庫布告機器人留著，所以我設定完就必須退出群組，如此一來就沒有重新發行權杖的機會，因此對我而言，使用管理登錄服務會是比較好的選擇。
+![已退出的群組](/images/2023-10-linenotify-kickgroup.png#center)
+
+### 3. 利用 curl 傳送訊息
+得到了 Access Token ，只需要利用 POST 方法發送訊息就可以觸發 Line Notify 跟群組之間的關係了。
+#### 以 python 為例
+使用 python requests 函式庫就可以直接操作：
+```python
+import requests
+access_token = "0PNUiBQqXyHV******TlJxpjNe5Kv5hoIJty7O"
+# Request headers
+headers = { 
+    "Content-Type": "multipart/form-data",
+    "Authorization": "Bearer " + token 
+    }
+# Request parameters
+# 要發送的訊息，前面有一個換行的符號，因為我覺得【○○○】後面應該要換一行再傳訊息比較有辨識度。
+data = {
+    "message": "\n測試測試"
+    }
+# 以 requests 發送 POST 請求
+requests.post("https://notify-api.line.me/api/notify", headers = headers, data = data)
+```
+#### 以 PHP 為例
+而 PHP 要使用一套 curl 相關的方法來操作：
+```php
+<?php
+$access_token = "0PNUiBQqXyHV******TlJxpjNe5Kv5hoIJty7O";
+# Request headers
+$headers = [
+        "Content-Type: multipart/form-data",
+        "Authorization: Bearer ".$access_token
+    ];
+# Request parameters
+$data = ["message" => "
+"."測試測試"];
+# 發送 POST 請求
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, "https://notify-api.line.me/api/notify");
+curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+curl_exec($ch);
+curl_close($ch);
+```
+### 4. 連結布告欄系統
+於是在原本布告欄系統新增文章的行為完成後，利用變數決定該篇文章要不要觸發 Line notify 的 POST 請求，並且因為布告欄系統存在的伺服器無法連結外網，發送 POST 的網頁必須找一台可以連接外網的伺服器，因此寫成這樣：
+```php
+<?php
+// 布告欄系統
+
+// 新增文章
+...
+$stmt = $conn->...;
+$stmt->execute(...);
+$insert_id = $conn->lastInsertId();
+
+if ($line!="") {
+    //群組設定
+    $group = "opd-ud";
+    //訊息設定 藥名：資訊
+    $msg = $medicine_name."：".$content;
+    //過濾非法字元
+    $msg = str_replace("#", "", $msg);
+    header("location: http://內網某伺服器/linenotify.php?id=".$insert_id."&group=".$group."&msg=".$msg);
+}
+```
+>Line Notify 發出訊息時 # 字號和後面的文字都不會出現，所以訊息中不能有 # 字號。
+
+接著是放在可以連外網伺服器的 `linenotify.php` ：
+```php
+<?php
+$group_list = explode("-", $_GET["group"]);
+$group_token = [
+    "opd" => "URn5NviA5g52T1*****usDEelgS3TNeb8f5nuo3eKRc", //門診
+    "ud" => "sLZVqcGPuVPpQQ4w6NMX*****9aJpFsqJxPmNlPZUeV", //住院
+    "adm" => "5LIZ1Vyxp*****TnkqpojFPvybyxi2il3TAC9xMHmw0", //行政
+];
+$message = ["message" => "
+".$_GET["msg"]];
+
+foreach ($group_list as $group) {
+    $headers = [
+        "Content-Type: multipart/form-data",
+        "Authorization: Bearer ".$group_token[$group]
+    ];
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, "https://notify-api.line.me/api/notify");
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $message);
+    curl_exec($ch);
+    curl_close($ch);
+}
+// 推播完訊息返回布告欄頁面
+header("Location: http://布告欄所在的伺服器/bulletin.php?edit=".$_GET["id"]); 
+```
+如此就完成了！
 ***
 ## Attribution
 - [Icons created by Freepik - Flaticon](https://www.flaticon.com/)
