@@ -1,63 +1,65 @@
 +++
 title = 'Line 自動傳訊息到群組'
 slug = 'Line-post-to-group'
-date = 2023-10-02T08:42:10+08:00
-draft = true
+date = 2023-10-06T08:42:10+08:00
+draft = false
 isCJKLanguage = true
 showToc = true
 TocOpen = true
 categories = ['工具小零件']
-tags = []
+tags = ['Line','Line Bot','Line Notify','PHP','Python','自動傳訊息','推播']
+[cover]
+image = '/images/2023-10-linenotify-cover.png'
 +++
-醫院藥庫有許多資訊需要被公布，例如說藥品的包裝有重大的變更，或者是藥品因為缺貨，需要暫時以其他藥品替代等等。因此藥庫在醫院內網建置了一個網頁布告欄，隨時將最新消息和各式附件張貼在網頁布告欄上。
+醫院藥庫有許多資訊需要公布，例如說藥品的包裝有重大的變更，或是因為缺貨，需要暫時以其他藥品替代等等。因此藥庫在醫院內網建置了一個網頁布告欄，隨時將最新消息和各式附件張貼在網頁布告欄讓其他藥師閱覽。
 
-然而並不是所有的藥師都有時間到院內電腦連上網頁布告欄觀看訊息，為了能夠即時將重要的資訊轉達給所有藥師，因此使用 Line 這個臺灣絕大多數人都會使用的即時通訊軟體進行訊息的傳送，成為了比較好的解決辦法。
+然而並不是所有的藥師都有時間到院內電腦連上網頁布告欄觀看訊息，為了將重要的資訊轉達給所有藥師，因此使用 Line 這個臺灣大多數人都在使用的通訊軟體進行訊息的傳送，是一個比較即時又有效率的辦法。
 
 ***
 ## 程式流程
-原本使用網頁布告欄的流程如下：
+原本網頁布告欄的流程如下：
 <!--![Stock Bulletin Flow](/images/2023-10-stock-notify-original.png#center)-->
 {{< figure src="/images/2023-10-stock-notify-original.png" width="60%" alt="Stock Bulletin Original Flow" align="center" >}}
-藥庫藥師將資訊以 PHP 網頁對資料庫新增一筆紀錄，線上藥師再以 PHP 網頁觀看資料庫的紀錄，此處的 PHP 網頁的頁首有自動查詢前幾筆的功能。
+藥庫藥師將資訊以 PHP 網頁發文到資料庫中，線上藥師再以 PHP 網頁觀看文章。
 
-若要使用 Line 自動發送訊息，規劃流程如下：
+若要使用 Line 自動發送訊息，規劃如下：
 {{< figure src="/images/2023-10-stock-notify-line.png" width="90%" alt="Stock Bulletin Line Flow" align="center" >}}
-藥庫藥師將資訊以 PHP 網頁對資料庫新增一筆紀錄，此時 PHP 會自動篩選紀錄，如果紀錄比較重要，會複製一份起來傳送到某個雲端。
-該雲端會使用 Line 發送訊息的形式傳送到線上藥師所在的 Line 群組中。
+藥庫藥師將資訊以 PHP 網頁發文到資料庫中，經過 PHP 篩選重要的內容，複製並傳送到某個雲端。
+該雲端再以 Line 的形式傳送到線上藥師所在的 Line 群組中。
 
-同時紀錄也留在原本的資料庫中，所以線上藥師亦可以使用 PHP 網頁觀看資料庫的紀錄。
+同時文章也留在原本的資料庫中，所以線上藥師亦可以使用 PHP 網頁文章。
 {{< figure src="/images/2023-10-stock-notify-mix.png" width="90%" alt="Stock Bulletin Full Flow" align="center" >}}
-為了避免資料庫中的訊息外流，雲端不直接讀取資料庫，只在藥庫藥師新增紀錄時觸發程式。優點是可以減少資安的疑慮，缺點是除非再次新增紀錄，否則無法重新發送資訊。
+為了避免資料庫中的資訊外流，雲端不直接讀取資料庫，只在藥庫藥師發文時觸發程式。優點是可以減少資安的疑慮，缺點是除非再次發文，否則無法重新傳 Line。
 ***
 ## Line Bot
 ![Line Messaging API](https://developers.line.biz/zh-hant/_media/services/messaging-api-thumb0.png)
 
-說到使用 Line 自動發送訊息，最先想到的就是利用 Line Bot ，這個被各大企業公司用來當成客服的聊天機器人。Line Bot 準確來說是 Line Messaging API ，可以主動對與機器人成為好友的使用者推送訊息，也能夠以程式的方式回應使用者對機器人說的話。
+說到使用 Line 自動發送訊息，最先想到的就是利用 Line Bot ，這個被各大企業公司用來當成客服的聊天機器人。Line Bot 準確來說是 Line Messaging API ，可以主動對與機器人成為好友的使用者推送訊息 (Push messages) ，也能夠以自動回應使用者 (Reply messages) 。
 
 後來實作了一陣子發現了一些優點但也發現了缺點，列舉如下：
 ### 優點
 - 可以自訂機器人的顯示圖片和名稱
-- 具有後台可以不用寫程式就可以自動回應加入好友通知和自動以 AI 回應字句
+- 後台可以直接設定自動回應預設字句或以 AI 分析使用者留言後回應
 - 具有後台可以觀看被加好友、回應次數等視覺化的圖表
 - 除了 Messaging API ，還有更多例如商家集點、連結 Line Pay 服務等功能
-- 說明文件清楚，並開發有 SDK 可供開發使用，而且開發者眾多網路資源豐富
+- 說明文件清楚，還有官方提供的 SDK 可供開發使用，而且開發者眾多，網路資源豐富
 ### 缺點
-- 需要找一個雲端平台部署，並讓 Line Messaging API 連結該平台
+- 需要找一個雲端平台部署，不熟悉的新手可能會小卡關
 - 免費額度為每個月 200 則訊息免費，同一則訊息發到 5 個群組內算 5 則
 
 >2023/10/03 Line Messaging API 共分三種資費：輕用量免費 Quota 200則/月，超過無法使用、中用量 800 元/月 Quota 3000則/月，超過無法使用、高用量 1200元/月 Quota 6000則/月，超過每則 0.2 元。
 
-當初藥庫的布告機器人是利用 Line Messaging API 建置後部署在 [Heroku](https://www.heroku.com/) 雲端平台上運行，但其實面臨到一些問題。
+當初藥庫的通知機器人是利用 Line Messaging API 建置後部署在 [Heroku](https://www.heroku.com/) 雲端平台上運行，但其實面臨到一些問題。
 
 {{< figure src="https://cdn-icons-png.flaticon.com/512/873/873120.png" width="10%" alt="Heroku" align="center" >}}
 
-Heroku **當時**的免費方案是超過 30 分鐘沒有使用會進入休眠狀態，再次觸發要等 30 秒左右的甦醒時間，有些時候可能會漏掉休眠時送過去的資料。後來便以 [kaffeine](https://kaffeine.herokuapp.com/) 等服務每 30 分鐘就戳一下機器人，讓 Heroku 不要睡著，看起來改善很多。
+Heroku **當時**的免費方案是超過 30 分鐘沒有使用會進入休眠狀態，再次觸發要等 30 秒左右的甦醒時間，有些時候可能會漏掉休眠時送過去的資料。後來便以 [kaffeine](https://kaffeine.herokuapp.com/) 等服務每 30 分鐘就戳一下機器人，讓 Heroku 不要睡著，體驗上改善很多。
 
-後來隨著 Heroku 開始收費，加上本院藥學部的群組變多了，每個月接收到的訊息也變多了，幾天之內就會超過 Line Messaging API 的免費額度，由於布告機器人並不是醫院的預算案，~~而且也不希望扯上醫院的預算案~~，於是斷然放棄了機器人。
+隨著 Heroku 開始收費，加上本院藥學部的群組變多了，每個月需要公告通知的訊息也變多了，幾天之內就會超過免費額度，由於通知機器人並不是醫院的預算案，~~而且也不希望扯上醫院的預算案~~，於是斷然放棄了 Line Bot 。
 
->2022/11/28 Heroku 宣布取消免費方案，罵聲不斷後雖然一度又宣布取消，但目前 看來最低還是有 5 美元/月的收費。
+>2022/11/28 Heroku 宣布取消免費方案，罵聲不斷後雖然一度又宣布恢復免費，但目前看來最低還是有 5 美元/月的收費。
 
-不過雖然機器人不能作為發送布告訊息的用途，還是有其他方法可以使用，這個會是另一篇文章的主題。
+雖然 Line Bot 對於現在的藥庫已經不能作為通知布告的用途，還是有其他地方可以派上用場，這個會是另一篇文章的主題。
 
 ***
 ## Line Notify
@@ -68,11 +70,11 @@ Heroku **當時**的免費方案是超過 30 分鐘沒有使用會進入休眠�
 
 ![Line Notify Preview](/images/2023-10-linenotify-preview.png#center)
 
-而且 Line Notify 只能發送訊息，無法得知對方回覆了什麼，也無法抓過去的對話。但是對於傳送布告訊息用途卻已經足夠了。
+而且 Line Notify 只能發送訊息，無法得知對方回覆了什麼，也無法知道群組裡的對話。但是對於通知布告的用途卻已經足夠了。
 
 ### 1. 登入 Line 帳號
 ![login line account](/images/2023-10-linenotify-0.png#center)
-點選右上角登入自己個人的 Line 帳號，這個帳號是個人名義或其他名義登錄的都沒有差別，不會在任何地方顯示出來。
+點選右上角登入自己個人的 Line 帳號，這個帳號是個人名義或其他名義登錄的都沒有差別，不會在任何地方顯示出來。接下來的文章會把這個登入的帳號叫做 「設定人」 。
 
 ### 2. 管理登錄服務
 ![管理登錄服務](/images/2023-10-linenotify-1.png#center)
@@ -80,13 +82,13 @@ Heroku **當時**的免費方案是超過 30 分鐘沒有使用會進入休眠�
 
 這個選項會有一點小複雜，以下的步驟以 PHP 為例，其他還有搭配 ngrok 的例子，可以參考 The Will Will Web 保哥的[文章](https://blog.miniasp.com/post/2020/02/17/Go-Through-LINE-Notify-Without-Any-Code)。
 
-首先要找到或是建立網頁伺服器，無法連接外網也無所謂，如果使用 PHP ，最簡單的方法應該是使用 [XAMPP](https://www.apachefriends.org/) 來快速建立伺服器環境，相關的教學內容可以自行 Google ，最後在瀏覽器上輸入 `http://localhost/` 或是 `http://127.0.0.1/` 可以指向某個資料夾裡的網頁。
+首先要找到或是建立網頁伺服器，無法連接外網也無所謂，如果使用 PHP ，最簡單的方法應該是使用 [XAMPP](https://www.apachefriends.org/) 來快速建立伺服器環境，相關的教學內容可以自行 Google ，伺服器的意思就是最後在瀏覽器上輸入 `http://localhost/` 或是 `http://127.0.0.1/` 或是指定的 IP 位置可以指向某個資料夾裡的 PHP 網頁。
 
 藥庫本身的布告欄是架在院內的某台伺服器上，因此可以直接挪用伺服器空間。
 
 #### A. 填寫資料完成取得 Client ID 和 Client Secret
 ![管理登錄服務](/images/2023-10-linenotify-2.png#center)
-選擇管理登錄服務後，進入到填寫資料的畫面，這邊所有的空格都是必填的。比較重要的項目其實只有三個，其他的項目最後都不會公開。
+選擇管理登錄服務後，進入到填寫資料的畫面，這邊所有的空格都是必填的。比較重要的項目其實只有三個，其他的都不會公開。
 - 服務名稱：【○○○】內的文字
 - 電子郵件帳號：該步驟完成後 Line 會寄認證信要求完成認證
 - Callback URL：這個可以先亂填一個 http 開頭的網址
@@ -110,11 +112,11 @@ Heroku **當時**的免費方案是超過 30 分鐘沒有使用會進入休眠�
 根據說明文件，中間藍色的 YOUR SITE 就是我們要製作的頁面。
 ![linenotify oauth flow](https://scdn.line-apps.com/n/line_notice/img/pc/img_api_document1.png#center)
 
-當我們向 Line Notify 認證的 API 發出請求並選擇特定群組的時候，該 API 會重新導向我們指定的 CallBack URL ，並用 POST 方法發送參數給 CallBack URL 。
+當我們向認證的 API 發出請求並選擇特定群組的時候 (圖片上方藍色箭頭) ，該 API 會重新導向我們指定的 CallBack URL ，並用 POST 方法發送參數給 CallBack URL  (圖片上方綠色箭頭) 。
 
-而我們必須使用剛剛拿到的參數，再次 POST 給另外一個 Line Notify API ，以此拿到特定群組的 Access Token 。
+而我們必須使用剛剛拿到的參數，再次 POST 給另外一個 Line Notify API (圖片下方藍色箭頭) ，以此拿到特定群組的 Access Token (圖片下方綠色箭頭) 。
 
-聽不懂沒關係，網頁的原始碼如下，抄起來貼上，改一下上面的 const ，然後把檔案名稱存成 callback.php 放在伺服器根目錄中：
+很複雜看不懂沒關係，網頁的原始碼如下，抄起來貼上，上面的 `const` 放上剛剛查詢到的 Client ID 和 Client Secret ，然後把檔案名稱存成 callback.php 放在伺服器根目錄中：
 ```php
 <?php
 // client id
@@ -122,7 +124,7 @@ const CLIENT_ID = '';
 // client secret
 const CLIENT_SECRET = '';
 // callback URL，連到這一頁的網址名稱
-const AUTH_PAGE_URL = '';
+const AUTH_PAGE_URL = 'http://localhost/callback.php';
 
 if(isset($_POST['code'])) {
     $ch = curl_init();
@@ -161,25 +163,25 @@ if(isset($_POST['code'])) {
 這邊要跟剛剛頁面上定義的常數值要一模一樣，要檢查 http 後面有沒有 s ，網誌後面有沒有 / 等等。
 ![管理登錄服務](/images/2023-10-linenotify-6-2.png#center)
 #### D. 完成 OAuth2 認證取得群組的 Access Token
-複製下面的網址，並更改網址中的資訊，貼到瀏覽器上，利用 GET 方法發送請求給 API 。
+複製下面的網址，並更改網址中的資訊。
 ```
 https://notify-bot.line.me/oauth/authorize?response_type=code&scope=notify&state=0&client_id=&redirect_uri=
 ```
 - 在 `client_id=` 和 `&` 之間放上自己申請的 client id
 - 在 `redirect_uri=` 之後放上 `http://localhost/callback.php` 或自己的 Callback URL
 
-如果連到這一頁，表示第一步驟成功了！在頁面上選擇想讓 Line Notify 傳送訊息 (連動) 到哪個群組，這裡的選項只有設定人自己跟設定人存在的群組而已，不過取得 Access Token 之後，設定人可以退出群組， Line Notify 依舊會有作用。
+輸入網址後看到下面這個畫面，表示成功了！在選單上選擇想讓 Line Notify 傳送訊息 (連動) 到哪個群組，這裡的選項只有設定人自己跟設定人存在的群組而已，不過取得 Access Token 之後，設定人可以退出群組， Line Notify 依舊會有作用。
 ![管理登錄服務](/images/2023-10-linenotify-7.png#center)
 
-按下按鈕後，瀏覽器的網址就會跑回 `http://localhost/callback.php` ，並在該頁面上顯示該群組的 `access_token` ，請小心保存下來，這個 Token 只會顯示這一次，如果不小心遺失了就必須重新發行一次。
+按下按鈕後，瀏覽器就會回到 `http://localhost/callback.php` ，並在該頁面上顯示該群組的 `access_token` ，請小心保存下來，這個 Token 只會顯示這一次，如果不小心遺失了就必須重新發行一次。
 
 ### 2. 個人頁面
 如果上面的流程太複雜了，那來試試這個。
 
-回到剛剛登入 Line 之後，這次改選個人頁面。
+剛剛登入 Line 之後，這次改選個人頁面。
 ![開發人員用存取權杖](/images/2023-10-linenotify-8.png#center)
 
-拉到網頁最下面發行開發人員用的存取權杖。
+網頁最下面選擇發行開發人員用的存取權杖。
 ![開發人員用存取權杖](/images/2023-10-linenotify-9.png#center)
 #### A. 填寫資料完成取得 Access Token
 接著填入自訂的權杖名稱【○○○】，選擇想讓 Line Notify 傳送訊息 (連動) 到哪個群組，點選發行。
@@ -189,14 +191,19 @@ https://notify-bot.line.me/oauth/authorize?response_type=code&scope=notify&state
 ![開發人員用存取權杖](/images/2023-10-linenotify-11.png#center)
 
 #### B. 管理登錄服務 vs 個人頁面
-那為什麼要選擇**管理登錄服務**，捨近求遠往艱難的路走去呢？
-差別在於後續能不能改名稱，也就是【○○○】。如果使用個人頁面發行存取權杖，權杖名稱【○○○】發行當下就決定了，日後無法更改，如果需要更改就必須重新發行一次。而管理登錄服務，則可以隨時變更名稱，甚至可以利用同一個登錄服務發行多個群組的權杖，名稱統一管理也比較有一致性。
+那為什麼要選擇**管理登錄服務**，捨近求遠往艱難的路走呢？
 
-講了很多優點，我個人還是覺得個人頁面直接發行單一次權杖好用很多。不過因為本院的有些群組涉及機密或考慮其他管理上的層面，部分主管不喜歡額外的人員 (例如我) 留在他們的群組中，但又必須將藥庫布告機器人留著，所以我設定完就必須退出群組，如此一來就沒有重新發行權杖的機會，因此對我而言，使用管理登錄服務會是比較好的選擇。
+差別在於後續能不能改名稱，也就是改【○○○】。如果使用個人頁面發行存取權杖，權杖名稱【○○○】當下就必須決定好，日後無法更改，如果需要更改就必須重新發行一次。而管理登錄服務，則可以隨時變更名稱，甚至可以利用同一個登錄服務發行多個群組的權杖，統一管理也比較有一致性。
+
+講了很多優點，我個人還是覺得使用個人頁面直接發行單一次權杖好用很多。不過因為醫院的有些群組涉及機密或考慮管理層面，部分主管不喜歡額外的人員 (就是我) 留在他們的群組中，但又必須將藥庫通知機器人留著，所以變成我設定好之後就退出群組，如此一來就沒有重新發行權杖的機會，因此對我而言，使用管理登錄服務會是比較好的選擇。
 ![已退出的群組](/images/2023-10-linenotify-kickgroup.png#center)
 
-### 3. 利用 curl 傳送訊息
-得到了 Access Token ，只需要利用 POST 方法發送訊息就可以觸發 Line Notify 跟群組之間的關係了。
+### 3. 將 Line Notify 加入群組
+發行權杖或是取得 Access Token 之後，設定人的 Line 就會收到 Line Notity 的通知，把這個 Line Notify 拉進剛剛設定的群組裡。
+![新增 Linenotify 進群組](/images/2023-10-linenotify-12.png#center)
+
+### 4. 利用 curl 傳送訊息
+現在只需要利用 POST 方法發送訊息就可以觸發 Line Notify 跟群組之間的關係了。
 #### 以 python 為例
 使用 python requests 函式庫就可以直接操作：
 ```python
@@ -242,7 +249,7 @@ curl_exec($ch);
 curl_close($ch);
 ```
 ### 4. 連結布告欄系統
-於是在原本布告欄系統新增文章的行為完成後，利用變數決定該篇文章要不要觸發 Line notify 的 POST 請求，並且因為布告欄系統存在的伺服器無法連結外網，發送 POST 的網頁必須找一台可以連接外網的伺服器，因此寫成這樣：
+於是在原本布告欄系統新增文章的行為完成後，利用變數決定要不要接著觸發機器人，並且因為布告欄系統存在的伺服器無法連結外網，發送 POST 的網頁必須找一台可以連接外網的伺服器，因此寫成這樣：
 ```php
 <?php
 // 布告欄系統
@@ -260,7 +267,8 @@ if ($line!="") {
     $msg = $medicine_name."：".$content;
     //過濾非法字元
     $msg = str_replace("#", "", $msg);
-    header("location: http://內網某伺服器/linenotify.php?id=".$insert_id."&group=".$group."&msg=".$msg);
+    //連線到另外一台可以連外網的伺服器
+    header("location: http://可以連外網的伺服器/linenotify.php?id=".$insert_id."&group=".$group."&msg=".$msg);
 }
 ```
 >Line Notify 發出訊息時 # 字號和後面的文字都不會出現，所以訊息中不能有 # 字號。
@@ -297,7 +305,7 @@ foreach ($group_list as $group) {
 // 推播完訊息返回布告欄頁面
 header("Location: http://布告欄所在的伺服器/bulletin.php?edit=".$_GET["id"]); 
 ```
-如此就完成了！
+大功告成了！
 ***
 ## Attribution
 - [Icons created by Freepik - Flaticon](https://www.flaticon.com/)

@@ -1,6 +1,6 @@
 baseURL = "https://lamzy.net/"
 languageCode = "zh-Hants-TW"
-title = "lamzy 懶誌"
+title = "Lamzy 懶誌"
 theme = "PaperMod"
 paginate = 15
 enableInlineShortcodes = true
@@ -63,7 +63,7 @@ disableHLJS = true
 #safari_pinned_tab = "/favicon.svg"
 
 [params.homeInfoParams]
-Title = "lamzy 懶誌"
+Title = "Lamzy 懶誌"
 Content = """
 Hi, I'm Lambo, a pharmacist at a hospital in Taiwan.{{< i class="twicon-main-island" >}}
 
