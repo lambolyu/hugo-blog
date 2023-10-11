@@ -90,9 +90,13 @@
 .post-content dl,
 .post-content ol,
 .post-content p,
-.post-content figure,
-.post-content ul {
+.post-content figure{
     margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.post-content ul {
+    margin-top: -15px;
     margin-bottom: 30px;
 }
 
