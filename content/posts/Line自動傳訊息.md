@@ -6,7 +6,7 @@ draft = false
 isCJKLanguage = true
 showToc = true
 TocOpen = true
-categories = ['工具小零件']
+categories = ['Line','PHP']
 tags = ['Line','Line Bot','Line Notify','PHP','Python','自動傳訊息','推播']
 [cover]
 image = '/images/2023-10-linenotify-cover.png'

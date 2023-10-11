@@ -6,7 +6,7 @@ draft = false
 isCJKLanguage = true
 showToc = true
 TocOpen = true
-categories = ['工具小零件']
+categories = ['Python']
 tags = ['Python','Google','TexttoSpeech','文字轉語音','語音合成','說話']
 +++
 什麼？！這個跟藥庫管理有關係嗎？！

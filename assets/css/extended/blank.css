@@ -51,8 +51,8 @@ Read https://github.com/adityatelange/hugo-PaperMod/wiki/FAQs#bundling-custom-cs
 }
 
 .active {
-    font-size: 110%;
-    font-weight: 600;
+    font-size: 100%;
+    font-weight: 900;
 }
 
 .toc ul {
@@ -63,9 +63,6 @@ Read https://github.com/adityatelange/hugo-PaperMod/wiki/FAQs#bundling-custom-cs
     margin: 0 0 0 20px;
     padding: 0px 15px 15px 20px;
     font-size: 16px;
-
-    max-height: 83vh;
-    overflow-y: auto;
 }
 
 .toc .inner::-webkit-scrollbar-thumb {
@@ -87,4 +84,12 @@ Read https://github.com/adityatelange/hugo-PaperMod/wiki/FAQs#bundling-custom-cs
 
 .toc li a:hover {
     color: var(--secondary);
+}
+
+.list:not(.dark)::-webkit-scrollbar-track {
+    background: 0 0;
+}
+
+.list:not(.dark)::-webkit-scrollbar-thumb {
+    border: 5px solid var(--theme);
 }

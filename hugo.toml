@@ -135,19 +135,19 @@ style = "monokai"
 
 [[menu.main]]
 identifier = "archives"
-name = "文章列表"
+name = "所有文章"
 url = "/archives/"
 weight = 10
 
-[[menu.main]]
-identifier = "tags"
-name = "標籤"
-url = "/tags/"
-weight = 30
+#[[menu.main]]
+#identifier = "tags"
+#name = "標籤"
+#url = "/tags/"
+#weight = 30
 
 [[menu.main]]
 identifier = "categories"
-name = "分類"
+name = "文章分類"
 url = "/categories/"
 weight = 40
 
