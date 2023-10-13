@@ -1,7 +1,7 @@
 +++
 title = 'Line 自動傳訊息到群組'
 slug = 'Line-post-to-group'
-date = 2023-10-06T08:42:10+08:00
+date = 2023-11-02T08:42:10+08:00
 draft = false
 isCJKLanguage = true
 showToc = true

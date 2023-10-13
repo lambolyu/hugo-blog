@@ -1,7 +1,7 @@
 +++
 title = 'Google Text to Speech + Python'
 slug = 'google-Text-to-speech-with-python'
-date = 2023-09-17T15:28:57+08:00
+date = 2023-10-02T15:28:57+08:00
 draft = false
 isCJKLanguage = true
 showToc = true
