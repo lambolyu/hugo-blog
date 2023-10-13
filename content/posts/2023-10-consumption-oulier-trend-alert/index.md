@@ -1,6 +1,6 @@
 +++
 title = '藥品消耗量分析：離群與趨勢'
-slug = 'consumption-oulier-trend-alert'
+slug = '2023-10-consumption-oulier-trend-alert'
 date = 2023-10-23T07:45:15+08:00
 draft = false
 isCJKLanguage = true
@@ -10,7 +10,7 @@ categories = ['Data Visualization']
 math = true
 tags = ['Python','Database','Chartjs','PHP','Data Visualization','資料視覺化','視覺化','Pandas','DataFrame','outlier','boxplot','interquartile range','z scores','trend','linear regression','r-squared','r2','coefficient of determination']
 [cover]
-image = '/images/2023-10-alert-outlier-trend-cover.png'
+image = 'alert-outlier-trend-cover.png'
 +++
 之前利用了 python 固定每週彙整出所有藥品的各週消耗量，接著就可以計算每個藥品消耗量的**指標值**，訂出適當的閾值，篩選出指標超過閾值的藥品，形成警示列表。這份報表使用了**離群值**跟**顯著趨勢**兩種統計指標作為警示。
 ***
@@ -30,7 +30,7 @@ image = '/images/2023-10-alert-outlier-trend-cover.png'
 
 例如，假設有一筆資料 `[0, 1, 2, 3, 10, 20, 30, 600, 9000]`，各統計量如下：
 
-![Boxplot Sample](/images/2023-10-boxplot-sample.png#center)
+![Boxplot Sample](boxplot-sample.png#center)
 
 - Q1 = (1+2)/2 = 1.5
 - Q2 = 10
@@ -131,8 +131,8 @@ pip install scipy
 
 問題來了！我們從機器學習的多參數設計，簡化成傳統數學的線性迴歸，卻還有兩個統計值需要分別建立閾值，還是太多了，還好藥品的資料全部都是母體資料，而且用 *p*-value 和 R-squared 作圖之後發現 *p*-value 趨近於 0 的資料剛好就是 R-squared 趨近於 1 的資料，如此一來我們只需設定其中一個閾值就好。
 
-<!--![p-value vs R-squared](/images/2023-10-p-value-R-squared.png#center)-->
-{{< figure src="/images/2023-10-p-value-R-squared.png" width="65%" alt="p-value vs R-squared" align="center" >}}
+<!--![p-value vs R-squared](p-value-R-squared.png#center)-->
+{{< figure src="p-value-R-squared.png" width="65%" alt="p-value vs R-squared" align="center" >}}
 
 >- ***p*-value 不顯著但 R-squared 很吻合**：表示資料組之間不太有關聯性，或者是抽樣的資料組無法代表整體情形，但有可能這次取到的資料點很完美的吻合直線。
 >- ***p*-value 很顯著但 R-squared 不吻合**：表示資料組之間關聯性很強，但是迴歸分析的方法可能不是直線，也許是多元直線或是其他曲線。
@@ -201,7 +201,7 @@ b = (lambda x: x**2)(3)
 ```
 
 而 DataFrame 的 `.apply()` 則是會依序將 DataFrame 的值抓出來經過 `.apply()` 內的函式計算後返回 DataFrame ，結合一下上面的例子：
-![DataFrame Apply](/images/2023-10-df-apply.png#center)
+![DataFrame Apply](df-apply.png#center)
 
 合一起就是，把`被計算欄`的值依序抓出當成 x ，計算 x**2 後將結果丟到`結果欄`：
 ```python
@@ -265,7 +265,7 @@ df.to_csv('trend.csv')
 ```
 
 用 php 讀取檔案後丟給 chartjs 生成圖表，圖表的設計需要能夠反映重點，大概設計如下：
-![Alert Chart Scale Design](/images/2023-10-alert-chart-scales.png#center)
+![Alert Chart Scale Design](alert-chart-scales.png#center)
 - x 軸設定為週序， y 軸為消耗數量
 - x 軸為 Category Axis ，並且在頭尾增加一欄空白的資料 (NaN)
 - x 軸的顯示範圍最小值從 data_0 開始，最大值到 data_11 ，頭尾空欄不顯示
@@ -320,7 +320,7 @@ df.to_csv('trend.csv')
 離群值圖表的資料，希望離群值的 bar 顏色會因為高於或低於限制顯示不同的顏色。所以第一步就會使用 php 的 `if` 功能進行圖表顏色的設定。
 
 也就是 `if ( $outlier == "greater" )` 的時候：
-![Alert Chart Greater Outliers](/images/2023-10-alert-chart-greater-outlier.png#center)
+![Alert Chart Greater Outliers](alert-chart-greater-outlier.png#center)
 由圖上可以知道我們需要設定三種資料：
 - 藍色 bar ： [`NaN`, data_0, data_1, ... , data_10, `NaN`, `NaN`]
 - 紅色 bar ： [`NaN`, `NaN`, `NaN`, ... , `NaN`, data_11, `NaN`]
@@ -329,7 +329,7 @@ df.to_csv('trend.csv')
 因為 x 軸是使用 Category Axis ，灰色 line 的頭尾會從空欄中的正中央開始及結束，所以上面才會藉由調整 x 軸的最大值和最小值來保留可視範圍，去除不美觀的線頭和線尾。
 
 而 `if ( $outlier == "less" )` 的時候，修正第二條資料的顏色：
-![Alert Chart Less Outliers](/images/2023-10-alert-chart-less-outlier.png#center)
+![Alert Chart Less Outliers](alert-chart-less-outlier.png#center)
 - 藍色 bar ： [`NaN`, data_0, data_1, ... , data_10, `NaN`, `NaN`]
 - 綠色 bar ： [`NaN`, `NaN`, `NaN`, ... , `NaN`, data_11, `NaN`]
 - 灰色 line ： [平均值, `NaN`, `NaN`, ... , `NaN`, `NaN`, 平均值]
@@ -396,12 +396,12 @@ for ($i = 0; $i < $data_num; $i++) $nanbody .= "NaN,";
 
 ### 顯著趨勢
 如同離群值的圖表設定，當 `if ( $trend == "rise" )` 的時候：
-![Alert Chart Rise Trend](/images/2023-10-alert-chart-rise-trend.png#center)
+![Alert Chart Rise Trend](alert-chart-rise-trend.png#center)
 - 藍色 bar ： [`NaN`, data_0, data_1, ... , data_10, data_11, `NaN`]
 - 紅色 line ： [迴歸線頭, `NaN`, `NaN`, ... , `NaN`, `NaN`, 迴歸線尾]
 
 `if ( $trend == "fall" )` 改迴歸線顏色：
-![Alert Chart Fall Trend](/images/2023-10-alert-chart-fall-trend.png#center)
+![Alert Chart Fall Trend](alert-chart-fall-trend.png#center)
 - 藍色 bar ： [`NaN`, data_0, data_1, ... , data_10, data_11, `NaN`]
 - 綠色 line ： [迴歸線頭, `NaN`, `NaN`, ... , `NaN`, `NaN`, 迴歸線尾]
 
@@ -458,4 +458,4 @@ for ($i = 0; $i < $data_num; $i++) $nanbody .= "NaN,";
 ***
 ## 成果
 引入其他資料並且迭代在網頁上之後就完成啦！
-![Alert Demo](/images/2023-10-alert-demo.gif#center)
+![Alert Demo](alert-demo.gif#center)

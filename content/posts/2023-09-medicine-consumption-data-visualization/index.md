@@ -1,6 +1,6 @@
 +++
 title = '藥品消耗資料視覺化'
-slug = 'Medicine-Consumption-Data-Visualization'
+slug = '2023-09-medicine-consumption-data-visualization'
 date = 2023-09-12T16:13:53+08:00
 draft = false
 isCJKLanguage = true
@@ -9,7 +9,7 @@ TocOpen = true
 categories = ['Data Visualization']
 tags = ['Python','MySQL','Database','Chartjs','PyAutoGUI','PHP','MariaDB','Data Visualization','資料視覺化','視覺化','自動操作','Pandas','DataFrame','資料庫','圖表']
 [cover]
-image = '/images/2023-09-Data-Visualization.png'
+image = 'Data-Visualization.png'
 +++
 身為藥庫管理藥師，最重要的事情就是確保藥品的供應無虞，因此對於藥品的消耗情形必須有一定的敏感性，當發生異常波動才能有辦法立刻做出應對決策。
 
@@ -72,7 +72,7 @@ while True:
 
 ### 批次執行檔 Batch
 因為涉及到模擬滑鼠跟鍵盤的操作，執行的時候必須取得系統管理者權限，以此越過 User Access Control (UAC) prompt。
-![Run as Administrator](/images/2023-09-run-as.png#center)
+![Run as Administrator](run-as.png#center)
 但是執行程式時，並沒有人再電腦前面手動變更權限，因此後來寫了一個 Batch 檔，取得權限後再執行 python ，以下是網路找到取得權限的寫法。
 ```batch
 @echo off
@@ -96,14 +96,14 @@ python pyautogui檔案的絕對路徑.py
 python 好像也可以處理定時執行程式的寫法，但是因為不太習慣背景開一個自己寫的程式在執行，後來選擇的是 Windows 內建的工作排程器。
 
 可以在 `開始 > Windows系統管理工具 > 工作排程器` 的資料夾裡面找到他，或是按下 `Win+R` 輸入 `taskschd.msc` ，~~不知道為什麼經過一陣卡卡的~~，就會看到下面這個畫面：
-![Task Scheduler](/images/2023-09-Task-Scheduler.png)
+![Task Scheduler](Task-Scheduler.png)
 點選右側選單的 `建立基本工作` 或 `建立工作` ，依序輸入希望執行時間和間隔時間：
-![Create Task](/images/2023-09-create-task.png#center)
+![Create Task](create-task.png#center)
 啟動程式填入剛剛形成的 Batch 檔案，便可以在指定的時間重複執行自動鍵盤滑鼠了。
 ***
 ## 資料結構化
 以本院為例，依照門診藥局與住院藥局等單位區分，總共會經過四次查詢，匯出四個檔案：
-![Exported files](/images/2023-09-export-files.png#center)
+![Exported files](export-files.png#center)
 因為院內系統是不同的工程師負責，匯出的報表各自的 header 和時間日期格式都不一樣。所以需要將這四張表統一 header ，並且結合在一起。如果因此出現空值，還必須填入一個特定的字樣。
 >例如門診藥局會有慢箋資料，但是住院藥局並不適用，因此報表就不會有。
 
@@ -145,9 +145,9 @@ df = pd.concat(
 1. **axis = 0** 指的是直向合併，如果要橫向合併則為 1 。
 2. **ignore_index = False** 表示合併之後的 index 需要保留原本各自的樣子，如果設定為 True ，則從首列依序標上 1、2、3...。
 3. **join = 'outer'** 看下列的圖片說明。
-![DataFrame Concat](/images/2023-09-df-concat.png#center)
-![DataFrame Outer Concat](/images/2023-09-df-concat-outer.png#center)
-![DataFrame Inner Concat](/images/2023-09-df-concat-inner.png#center)
+![DataFrame Concat](df-concat.png#center)
+![DataFrame Outer Concat](df-concat-outer.png#center)
+![DataFrame Inner Concat](df-concat-inner.png#center)
 我習慣上會將兩個表格的 columns headers 整理成一樣的才會 concat ， join 的機會其實不多。
 真的需要 join 的時候，我會使用 pandas 的 merge 方法，比 concat 還更好用。
 ***
@@ -403,8 +403,8 @@ const option = {
 </script>
 ```
 滑鼠指到資料點上的時候會產生的圖示說明，項目需要依照指定的順序堆疊。因為移動平均線顯示在整個直條圖的最上層，所以預設的圖示說明順序也是平均最上面，但我們希望平均能夠在最下面。
-<!--![Chartjs Tooltip](/images/2023-09-chartjs-tooltip.png#center)-->
-{{< figure src="/images/2023-09-chartjs-tooltip.png" width="65%" alt="chartjs-tooltip" align="center" >}}
+<!--![Chartjs Tooltip](chartjs-tooltip.png#center)-->
+{{< figure src="chartjs-tooltip.png" width="65%" alt="chartjs-tooltip" align="center" >}}
 ```html
 <script>
 const option = {
@@ -457,4 +457,4 @@ const option = {
 剩下的可能要自己參考官方說明。另外 chartjs 有在持續更新中，所以如果有看到 stackoverflow 上面有問題的解答，可能要看一下版本是否相容。
 ***
 ## 成果
-![Data Visualization](/images/2023-09-Data-Visualization.gif)
+![Data Visualization](Data-Visualization.gif)

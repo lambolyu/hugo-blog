@@ -1,6 +1,6 @@
 +++
 title = '連續處方箋的餘量計算'
-slug = 'refillable-prescription-consumption'
+slug = '2023-11-refillable-prescription-consumption'
 date = 2023-11-30T14:22:06+08:00
 draft = true
 isCJKLanguage = true

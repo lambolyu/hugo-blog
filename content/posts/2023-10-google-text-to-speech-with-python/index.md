@@ -1,6 +1,6 @@
 +++
 title = 'Google Text to Speech + Python'
-slug = 'google-Text-to-speech-with-python'
+slug = '2023-10-google-text-to-speech-with-python'
 date = 2023-10-02T15:28:57+08:00
 draft = false
 isCJKLanguage = true
@@ -30,67 +30,67 @@ tags = ['Python','Google','TexttoSpeech','文字轉語音','語音合成','說�
 ## 開啟 Google Cloud 服務
 
 首先登入 google 的帳號，並且打開 [Google Cloud](https://cloud.google.com/) 的頁面，並且點選右上角的免費試用。
-![Google Cloud Activation](/images/2023-09-gcloud-01.png#center)
+![Google Cloud Activation](gcloud-01.png#center)
 
 >**為什麼是試用？**
 >
 >就像剛剛提到的， Google Cloud 的服務其實是收費的，但是有提供每個月免費額度。只是因為有部分服務是收費的，所以啟用 Google Cloud 的時候要填寫信用卡資料。
 
 接著填寫啟用資料：
-![Google Cloud Activation](/images/2023-09-gcloud-02.png#center)
+![Google Cloud Activation](gcloud-02.png#center)
 
 帳戶類型可以選擇個人，並填入個人信用卡資訊：
-![Google Cloud Activation](/images/2023-09-gcloud-03.png#center)
+![Google Cloud Activation](gcloud-03.png#center)
 
 啟用完成後，再填寫一些問題， Google Cloud 目前有提供 300 美元的免費抵免額：
-![$300 in free credits for new customers](/images/2023-09-gcloud-04.png#center)
+![$300 in free credits for new customers](gcloud-04.png#center)
 
 正式進入頁面後，左上角有預設的專案 (project) ，建立不同的專案是為了處理多個團隊工作內容及團隊底下使用者的管理權限。但是我們使用 google Text to Speech 只有個人使用，專案名稱是什麼並不會在任何地方顯示出來，可以直接用預設專案 My First Project 就好。
-![Google Cloud Projects](/images/2023-09-gcloud-05.png#center)
+![Google Cloud Projects](gcloud-05.png#center)
 
 如果真的需要建立專案，可以點進左上角，點選建立專案：
-![Google Cloud Create Projects](/images/2023-09-gcloud-06.png#center)
+![Google Cloud Create Projects](gcloud-06.png#center)
 
 就可自己建立喜歡的名稱，至於機構是什麼我就沒有特別去研究，保留無機構即可：
-![Google Cloud Create Projects](/images/2023-09-gcloud-07.png#center)
+![Google Cloud Create Projects](gcloud-07.png#center)
 ***
 ## 啟用 Text to Speech 的 API
 進入 Google Cloud 的[控制台](https://console.cloud.google.com/) (Console)，也就是剛剛可以看到左上角有預設專案名稱的那個頁面，點按左上角的 `≡` ，選擇 「 API 和服務」 ，再選擇 「程式庫」 ：
-![Google Cloud API](/images/2023-09-gcloud-08.png#center)
+![Google Cloud API](gcloud-08.png#center)
 
 在搜尋 API 和服務的欄位中輸入 `text to speech` ：
-![Google Cloud API Search](/images/2023-09-gcloud-10.png#center)
+![Google Cloud API Search](gcloud-10.png#center)
 
 搜尋結果中選擇 Cloud Text-to-Speech API ：
-![Google Cloud API Search](/images/2023-09-gcloud-11.png#center)
+![Google Cloud API Search](gcloud-11.png#center)
 
 點選啟用按鈕：
-![Google Cloud API Search](/images/2023-09-gcloud-12.png#center)
+![Google Cloud API Search](gcloud-12.png#center)
 ***
 ## API 憑證
 啟用完成後，點選左側選單中的 「 憑證 」 選項：
-![Google Cloud API Search](/images/2023-09-gcloud-13.png#center)
+![Google Cloud API Search](gcloud-13.png#center)
 上方點選 「 + 建立憑證 」：
-![Google Cloud API Search](/images/2023-09-gcloud-14.png#center)
+![Google Cloud API Search](gcloud-14.png#center)
 並以 「 服務帳戶 」 的類型建立 API 憑證：
-![Google Cloud API Search](/images/2023-09-gcloud-15.png#center)
+![Google Cloud API Search](gcloud-15.png#center)
 註冊一個服務帳戶的名稱，這個名稱在個人使用的情境下一樣不會對外顯示，隨便取一個例如 「 tts 」 即可，接著跳過所有的表單空格，直接按下 「 完成 」 即可：
-![Google Cloud API Search](/images/2023-09-gcloud-16.png#center)
+![Google Cloud API Search](gcloud-16.png#center)
 ***
 ## API 金鑰
 建立完成後，點擊剛剛完成的服務帳戶：
-![Google Cloud API Search](/images/2023-09-gcloud-17.png#center)
+![Google Cloud API Search](gcloud-17.png#center)
 上方選單點選 「 金鑰 」 ：
-![Google Cloud API Search](/images/2023-09-gcloud-18.png#center)
+![Google Cloud API Search](gcloud-18.png#center)
 頁面中點選 「 新增金鑰 」 並選擇 「 建立新的金鑰 」：
-![Google Cloud API Search](/images/2023-09-gcloud-19.png#center)
+![Google Cloud API Search](gcloud-19.png#center)
 預設會以 json 檔案的形式建立，直接按下 「 建立 」 即可：
-![Google Cloud API Search](/images/2023-09-gcloud-21.png#center)
+![Google Cloud API Search](gcloud-21.png#center)
 接著瀏覽器就會直接下載建立好的 json 檔，請儲存在一個固定的位置：
-![Google Cloud API Search](/images/2023-09-gcloud-22.png#center)
+![Google Cloud API Search](gcloud-22.png#center)
 值得一提的是，這個 json 金鑰的期限很長，裡面會有很龐大的亂碼跟參數，並且**無法重新下載**，所以如果 json 檔案遺失了，只能刪除金鑰後再重新建立一次。
 >**無法重新下載金鑰，只能刪除。**
->![Google Cloud API Search](/images/2023-09-gcloud-23.png#center)
+>![Google Cloud API Search](gcloud-23.png#center)
 ***
 ## Python 與 Text to Speech API
 先上 google 的[說明文件](https://cloud.google.com/python/docs/reference/texttospeech/latest)，但是沒有正體中文。
@@ -148,17 +148,17 @@ pip install pydub
 同時要記得安裝 [ffmpeg](https://ffmpeg.org/) 讓 pydub 可以處理 mp3 檔案。
 ### ffmpeg
 官網找到 windows 版本的下載位置，還分成 shared 版跟完整版， shared 版本的檔案比較小，表示編譯出來的 exe 不包含所有的 dll 。為了節省不必要的麻煩，選擇下載完整版：
-![Download Ffmepg](/images/2023-09-ffmepg-dl.png#center)
+![Download Ffmepg](ffmepg-dl.png#center)
 下載完成的檔案解壓縮到固定位置後，必須將 bin 資料夾的路徑加到 Windows 的環境變數中。意思是說在 Powershell 或 cmd 視窗中輸入 ffmepg 指令就可以直接執行程式，而不用輸入完整路徑。
 
 開啟`系統內容`，可以在我的電腦圖示上按下滑鼠右鍵點內容；或是按下 `Win鍵 + R` 輸入 `sysdm.cpl` ，並點選 「 進階 」 的頁籤：
-![Insert Environment Variables](/images/2023-09-envvar-setting-01.png#center)
+![Insert Environment Variables](envvar-setting-01.png#center)
 按下 「 環境變數 」 按鈕：
-![Insert Environment Variables](/images/2023-09-envvar-setting-02.png#center)
+![Insert Environment Variables](envvar-setting-02.png#center)
 在 「 系統變數 」 的方框中，找到 Path 的變數，按下編輯：
-![Insert Environment Variables](/images/2023-09-envvar-setting-03.png#center)
+![Insert Environment Variables](envvar-setting-03.png#center)
 接著在編輯環境變數的視窗中點選 「 新增 」 ，並輸入剛剛解壓縮後的 ffmepg\bin 資料夾的路徑，例如： `C:\ffmepg\bin` 。
-![Insert Environment Variables](/images/2023-09-envvar-setting-04.png#center)
+![Insert Environment Variables](envvar-setting-04.png#center)
 新增完畢後一路點選確定或套用離開設定視窗。
 ### pydub
 pydub 算是個很好操作音檔的 python 函式庫，先上[官方文件](http://pydub.com/)。

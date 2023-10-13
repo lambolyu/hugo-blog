@@ -1,6 +1,6 @@
 +++
 title = 'Line 自動傳訊息到群組'
-slug = 'Line-post-to-group'
+slug = '2023-11-line-post-to-group'
 date = 2023-11-02T08:42:10+08:00
 draft = false
 isCJKLanguage = true
@@ -9,7 +9,7 @@ TocOpen = true
 categories = ['Line','PHP']
 tags = ['Line','Line Bot','Line Notify','PHP','Python','自動傳訊息','推播']
 [cover]
-image = '/images/2023-10-linenotify-cover.png'
+image = 'linenotify-cover.png'
 +++
 醫院藥庫有許多資訊需要公布，例如說藥品的包裝有重大的變更，或是因為缺貨，需要暫時以其他藥品替代等等。因此藥庫在醫院內網建置了一個網頁布告欄，隨時將最新消息和各式附件張貼在網頁布告欄讓其他藥師閱覽。
 
@@ -18,17 +18,17 @@ image = '/images/2023-10-linenotify-cover.png'
 ***
 ## 程式流程
 原本網頁布告欄的流程如下：
-<!--![Stock Bulletin Flow](/images/2023-10-stock-notify-original.png#center)-->
-{{< figure src="/images/2023-10-stock-notify-original.png" width="60%" alt="Stock Bulletin Original Flow" align="center" >}}
+<!--![Stock Bulletin Flow](stock-notify-original.png#center)-->
+{{< figure src="stock-notify-original.png" width="60%" alt="Stock Bulletin Original Flow" align="center" >}}
 藥庫藥師將資訊以 PHP 網頁發文到資料庫中，線上藥師再以 PHP 網頁觀看文章。
 
 若要使用 Line 自動發送訊息，規劃如下：
-{{< figure src="/images/2023-10-stock-notify-line.png" width="90%" alt="Stock Bulletin Line Flow" align="center" >}}
+{{< figure src="stock-notify-line.png" width="90%" alt="Stock Bulletin Line Flow" align="center" >}}
 藥庫藥師將資訊以 PHP 網頁發文到資料庫中，經過 PHP 篩選重要的內容，複製並傳送到某個雲端。
 該雲端再以 Line 的形式傳送到線上藥師所在的 Line 群組中。
 
 同時文章也留在原本的資料庫中，所以線上藥師亦可以使用 PHP 網頁文章。
-{{< figure src="/images/2023-10-stock-notify-mix.png" width="90%" alt="Stock Bulletin Full Flow" align="center" >}}
+{{< figure src="stock-notify-mix.png" width="90%" alt="Stock Bulletin Full Flow" align="center" >}}
 為了避免資料庫中的資訊外流，雲端不直接讀取資料庫，只在藥庫藥師發文時觸發程式。優點是可以減少資安的疑慮，缺點是除非再次發文，否則無法重新傳 Line。
 ***
 ## Line Bot
@@ -63,21 +63,21 @@ Heroku **當時**的免費方案是超過 30 分鐘沒有使用會進入休眠�
 
 ***
 ## Line Notify
-![Line Notify](/images/2023-10-linenotify.png#center)
+![Line Notify](linenotify.png#center)
 替代方案就是 Line 提供的另外一項免費的服務： Line Notify ，說明文件請參考[這裡](https://notify-bot.line.me/doc/en/)。
 
 有別於 Line Bot ， Line Notify 本身沒有後台可以觀看數據，無法更改顯示圖片和名稱，名稱會預設以【○○○】夾註並在後面顯示推送的訊息。
 
-![Line Notify Preview](/images/2023-10-linenotify-preview.png#center)
+![Line Notify Preview](linenotify-preview.png#center)
 
 而且 Line Notify 只能發送訊息，無法得知對方回覆了什麼，也無法知道群組裡的對話。但是對於通知布告的用途卻已經足夠了。
 
 ### 1. 登入 Line 帳號
-![login line account](/images/2023-10-linenotify-0.png#center)
+![login line account](linenotify-0.png#center)
 點選右上角登入自己個人的 Line 帳號，這個帳號是個人名義或其他名義登錄的都沒有差別，不會在任何地方顯示出來。接下來的文章會把這個登入的帳號叫做 「設定人」 。
 
 ### 2. 管理登錄服務
-![管理登錄服務](/images/2023-10-linenotify-1.png#center)
+![管理登錄服務](linenotify-1.png#center)
 選擇管理登錄服務。
 
 這個選項會有一點小複雜，以下的步驟以 PHP 為例，其他還有搭配 ngrok 的例子，可以參考 The Will Will Web 保哥的[文章](https://blog.miniasp.com/post/2020/02/17/Go-Through-LINE-Notify-Without-Any-Code)。
@@ -87,7 +87,7 @@ Heroku **當時**的免費方案是超過 30 分鐘沒有使用會進入休眠�
 藥庫本身的布告欄是架在院內的某台伺服器上，因此可以直接挪用伺服器空間。
 
 #### A. 填寫資料完成取得 Client ID 和 Client Secret
-![管理登錄服務](/images/2023-10-linenotify-2.png#center)
+![管理登錄服務](linenotify-2.png#center)
 選擇管理登錄服務後，進入到填寫資料的畫面，這邊所有的空格都是必填的。比較重要的項目其實只有三個，其他的都不會公開。
 - 服務名稱：【○○○】內的文字
 - 電子郵件帳號：該步驟完成後 Line 會寄認證信要求完成認證
@@ -95,16 +95,16 @@ Heroku **當時**的免費方案是超過 30 分鐘沒有使用會進入休眠�
 
 寫錯或是亂寫都沒有關係，這些資訊之後都可以隨時更改。寫完之後前往下一步。
 
-![管理登錄服務](/images/2023-10-linenotify-4.png#center)
+![管理登錄服務](linenotify-4.png#center)
 再次確認資訊，按下登錄。
 
-![管理登錄服務](/images/2023-10-linenotify-5.png#center)
+![管理登錄服務](linenotify-5.png#center)
 回到自己的信箱點選認證信，再點選前往服務一覽。
 
-![管理登錄服務](/images/2023-10-linenotify-6.png#center)
+![管理登錄服務](linenotify-6.png#center)
 點選剛剛建立的服務，可以取得 Client ID 和 Client Secret 。
 
-![管理登錄服務](/images/2023-10-linenotify-6-1.png#center)
+![管理登錄服務](linenotify-6-1.png#center)
 　
 #### B. 製作 Call Back 頁面
 接著來製作讓 Line Notify 認證回傳的頁面。
@@ -161,7 +161,7 @@ if(isset($_POST['code'])) {
 ```
 #### C. 修改剛剛資料頁中的 Callback URL
 這邊要跟剛剛頁面上定義的常數值要一模一樣，要檢查 http 後面有沒有 s ，網誌後面有沒有 / 等等。
-![管理登錄服務](/images/2023-10-linenotify-6-2.png#center)
+![管理登錄服務](linenotify-6-2.png#center)
 #### D. 完成 OAuth2 認證取得群組的 Access Token
 複製下面的網址，並更改網址中的資訊。
 ```
@@ -171,7 +171,7 @@ https://notify-bot.line.me/oauth/authorize?response_type=code&scope=notify&state
 - 在 `redirect_uri=` 之後放上 `http://localhost/callback.php` 或自己的 Callback URL
 
 輸入網址後看到下面這個畫面，表示成功了！在選單上選擇想讓 Line Notify 傳送訊息 (連動) 到哪個群組，這裡的選項只有設定人自己跟設定人存在的群組而已，不過取得 Access Token 之後，設定人可以退出群組， Line Notify 依舊會有作用。
-![管理登錄服務](/images/2023-10-linenotify-7.png#center)
+![管理登錄服務](linenotify-7.png#center)
 
 按下按鈕後，瀏覽器就會回到 `http://localhost/callback.php` ，並在該頁面上顯示該群組的 `access_token` ，請小心保存下來，這個 Token 只會顯示這一次，如果不小心遺失了就必須重新發行一次。
 
@@ -179,16 +179,16 @@ https://notify-bot.line.me/oauth/authorize?response_type=code&scope=notify&state
 如果上面的流程太複雜了，那來試試這個。
 
 剛剛登入 Line 之後，這次改選個人頁面。
-![開發人員用存取權杖](/images/2023-10-linenotify-8.png#center)
+![開發人員用存取權杖](linenotify-8.png#center)
 
 網頁最下面選擇發行開發人員用的存取權杖。
-![開發人員用存取權杖](/images/2023-10-linenotify-9.png#center)
+![開發人員用存取權杖](linenotify-9.png#center)
 #### A. 填寫資料完成取得 Access Token
 接著填入自訂的權杖名稱【○○○】，選擇想讓 Line Notify 傳送訊息 (連動) 到哪個群組，點選發行。
-![開發人員用存取權杖](/images/2023-10-linenotify-10.png#center)
+![開發人員用存取權杖](linenotify-10.png#center)
 
 這樣 Access Token 就出現了。是不是有夠簡單？
-![開發人員用存取權杖](/images/2023-10-linenotify-11.png#center)
+![開發人員用存取權杖](linenotify-11.png#center)
 
 #### B. 管理登錄服務 vs 個人頁面
 那為什麼要選擇**管理登錄服務**，捨近求遠往艱難的路走呢？
@@ -196,11 +196,11 @@ https://notify-bot.line.me/oauth/authorize?response_type=code&scope=notify&state
 差別在於後續能不能改名稱，也就是改【○○○】。如果使用個人頁面發行存取權杖，權杖名稱【○○○】當下就必須決定好，日後無法更改，如果需要更改就必須重新發行一次。而管理登錄服務，則可以隨時變更名稱，甚至可以利用同一個登錄服務發行多個群組的權杖，統一管理也比較有一致性。
 
 講了很多優點，我個人還是覺得使用個人頁面直接發行單一次權杖好用很多。不過因為醫院的有些群組涉及機密或考慮管理層面，部分主管不喜歡額外的人員 (就是我) 留在他們的群組中，但又必須將藥庫通知機器人留著，所以變成我設定好之後就退出群組，如此一來就沒有重新發行權杖的機會，因此對我而言，使用管理登錄服務會是比較好的選擇。
-![已退出的群組](/images/2023-10-linenotify-kickgroup.png#center)
+![已退出的群組](linenotify-kickgroup.png#center)
 
 ### 3. 將 Line Notify 加入群組
 發行權杖或是取得 Access Token 之後，設定人的 Line 就會收到 Line Notity 的通知，把這個 Line Notify 拉進剛剛設定的群組裡。
-![新增 Linenotify 進群組](/images/2023-10-linenotify-12.png#center)
+![新增 Linenotify 進群組](linenotify-12.png#center)
 
 ### 4. 利用 curl 傳送訊息
 現在只需要利用 POST 方法發送訊息就可以觸發 Line Notify 跟群組之間的關係了。

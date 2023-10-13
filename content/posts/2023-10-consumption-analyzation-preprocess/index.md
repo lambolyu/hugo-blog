@@ -1,6 +1,6 @@
 +++
 title = '藥品消耗量分析：前置作業'
-slug = 'consumption-analyzation-preprocess'
+slug = '2023-10-consumption-analyzation-preprocess'
 date = 2023-10-10T08:00:40+08:00
 draft = false
 isCJKLanguage = true
@@ -25,7 +25,7 @@ tags = ['Python','MySQL','Database','MariaDB','Pandas','DataFrame','資料庫','
 
 但是醫院星期六只有上午看診或是星期日沒有看診，此時藥品的消耗量大幅降低，甚至沒有消耗，序列資料就會受到影響，這種影響在進入時間序列分析時，會被數學運算歸納成新的特徵，進而改變模型描述資訊。因為我們要將各藥品之間互相做比較，六日使用量低的特徵比較沒有意義，所以為了避免六日的干擾，我們會將整週的消耗量相加，直接利用週跟週之間的消耗量重新形成新的序列，~~類似降維的概念~~，以弭平六日的影響。
 
-![Day to Week](/images/2023-09-daytoweek.png#center)
+![Day to Week](daytoweek.png#center)
 如上圖，上面兩張圖和下面兩張圖分別為不同藥品，可以觀察到上面的藥品容易受到六日的干擾，我們後續使用程式篩選出異常資料時，程式可能會判定其中一種情形為異常，例如如果大部分的藥品六日都沒有消耗，下面那種就會是異常，但其實六日波動對於藥品消耗不是異常情形，改為週總和序列後取消六日的差異，讓程式將重點放在其他異常情形上。
 ***
 ## 程式規劃
@@ -34,7 +34,7 @@ tags = ['Python','MySQL','Database','MariaDB','Pandas','DataFrame','資料庫','
 2. 形成中繼檔案交由 php 讀取。
 3. 中繼的檔案格式不限，但開發的時候考慮閱讀便利所以選用 csv 檔。
 4. php 讀到資料後，在同一個網頁裡面丟給 chartjs 作圖。
-![Alert program design](/images/2023-09-alert-design.png#center)
+![Alert program design](alert-design.png#center)
 
 ***
 ## 資料收集與整理
@@ -43,7 +43,7 @@ tags = ['Python','MySQL','Database','MariaDB','Pandas','DataFrame','資料庫','
 2. 將不連續的`日期：日消耗總和`資料補上連續日期資料，消耗數量空值補 0 。
 3. 將日期重新取樣成每週，並對資料再次進行相加，得到`週序：週消耗總和`的陣列或字典。
 4. 將資料改成下圖的形式，對於後續可讀性或操作回饋比較好。
-![Alert Data Like](/images/2023-09-alert-data-like.png#center)
+![Alert Data Like](alert-data-like.png#center)
 
 先匯出資料庫中的資料，需要決定一個起始日期，例如一年前的當月月初，然後一樣使用 MySQL GROUP BY 查詢返回 SUM 來計算總和：
 ```python
@@ -102,18 +102,18 @@ php 是利用 `foreach()` 直接迭代新的連續時間陣列，並將舊資料
 )
 ```
 `how` 是指定左表和右表的結合方式，預設值是 `inner` ，取**交集**索引和該索引的資料：
-![Pandas Merge Inner](/images/2023-09-merge-inner.png#center)
+![Pandas Merge Inner](merge-inner.png#center)
 
 參數給 `outer` 表示**聯集**，空出來的格子則會被塞入 `NaN` ：
-![Pandas Merge Outer](/images/2023-09-merge-outer.png#center)
+![Pandas Merge Outer](merge-outer.png#center)
 
 其他還有以左表為主的 `left` ，或是右表為主的 `right` ，都很常用：
-![Pandas Merge Left](/images/2023-09-merge-left.png#center)
-![Pandas Merge Right](/images/2023-09-merge-right.png#center)
+![Pandas Merge Left](merge-left.png#center)
+![Pandas Merge Right](merge-right.png#center)
 
 ## pd.groupby with pd.Grouper
 連續時間資料的 DataFrame 與原本總和的 DataFrame 合併之後，資料會長這樣：
-![Alert Data After Merge](/images/2023-09-data-day-aftermerge.png#center)
+![Alert Data After Merge](data-day-aftermerge.png#center)
 
 現在要把日期每七天加在一起，最直覺的可能就是用**切片**的方式，每七個的資料切一刀計算總和，但無論如何第一件要做的事情是：以藥名  **分組**。
 ```python
@@ -141,12 +141,12 @@ df = df.groupby(by=['藥品代碼', pd.Grouper(freq='W', key='日期')]).sum()
 ```
 
 重新取樣之後資料會由星期一加到星期日，並且顯示為星期日的日期：
-![Resample by week](/images/2023-09-data-resample.png#center)
+![Resample by week](data-resample.png#center)
 
 但此時如果未滿一個禮拜，例如假設今天是禮拜三，重新取樣會將星期四、星期五、星期六和星期日的資料視為 0 進行加總，出現下星期日的日期，但這個資料點有太多的 0 了，並不是真實情形，所以會在後面使用其他程式排除。
 
 ## pd.pivot_table
-![Alert Data After Maerge](/images/2023-09-data-week-aftermerge.png#center)
+![Alert Data After Maerge](data-week-aftermerge.png#center)
 接著要把**週序**移到橫列當作 columns name ，需要用到 `pivot_table` 樞紐分析表的功能，下面列舉一些比較常用的參數：
 ```python
 df = pd.pivot_table(
@@ -158,10 +158,10 @@ df = pd.pivot_table(
 )
 ```
 `values` 、 `index` 、 `columns` 是必須欄位，要填入來源 DataFrame 的 columns 名稱，也可以上 list 形式變成兩級 index 。其中 `values` 為資料來源， `index` 為列 (row) 的來源， `columns` 為欄 (column) 的來源：
-![Pandas DataFrame Pivot](/images/2023-09-pivot-demo-finish.png#center)
+![Pandas DataFrame Pivot](pivot-demo-finish.png#center)
 
 如果資料來源有衝突的時候，資料就以 `aggfunc` 的方式處理，預設為 `mean` 平均值，例如以下的情形就會取 300 和 400 的平均值為 350 ：
-![Pandas DataFrame Pivot Conflict](/images/2023-09-pivot-demo-conflict.png#center)
+![Pandas DataFrame Pivot Conflict](pivot-demo-conflict.png#center)
 
 >**其實還有 `pd.pivot` 可以使用！**
 >

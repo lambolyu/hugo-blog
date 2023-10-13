@@ -1,6 +1,6 @@
 +++
 title = '公費疫苗專用標籤'
-slug = 'cdc-vaccine-label-qrcode'
+slug = '2023-12-cdc-vaccine-label-qrcode'
 date = 2023-12-12T14:20:28+08:00
 draft = true
 isCJKLanguage = true

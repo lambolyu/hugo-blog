@@ -1,6 +1,6 @@
 +++
 title = '這裡是哪裡'
-slug = 'new blog by Hugo'
+slug = '2023-09-new-blog-by-hugo'
 date =  2023-09-03T11:41:07+08:00
 draft = false
 isCJKLanguage = true
@@ -159,7 +159,7 @@ weight = 0
 ***
 ## archives 和 search
 可以留意到剛剛設定 `hugo.toml` 最底下的 menu 設定，就是 PeperMod 右上角的選單。
-![PaperMod Menu](/images/2023-09-papermod-menu.png#center)
+![PaperMod Menu](papermod-menu.png#center)
 在 PaperMod 的 Features 指引中提到，需要自行新增 archives 和 search 的頁面，不過因為我暫時不需要搜尋功能，僅需設定 archives 就好：
 ```bash
 hugo new content archives.md
@@ -276,8 +276,8 @@ Press Ctrl+C to stop
 
 >註冊 Github 後，新增一個 repository ，直接把根目錄上的所有內容 push 上去。接著利用 Netlity 新增一個 site 串聯 Github 的 repository 。如此一來只要每次的 git push ，就會觸發 Netlity 直接更新網站。
 
-{{< figure src="/images/2023-09-deployed-by-netlify.png" width="80%" alt="deployed-by-netlify" align="center" >}}
-<!-- ![deployed-by-netlify](/images/2023-09-deployed-by-netlify.png) -->
+{{< figure src="deployed-by-netlify.png" width="80%" alt="deployed-by-netlify" align="center" >}}
+
 
 將網站 git push 上去之前，必須跟 Netlity 說明我們用的 SSG 是 Hugo ，因此根據 [官方指引](https://gohugo.io/hosting-and-deployment/hosting-on-netlify/) ，我們需要在根目錄底下新增 `netlify.toml` ，用來向 Netlity 溝通 Hugo 的環境，這個檔案會隨著 Hugo 的版本有所差異。
 

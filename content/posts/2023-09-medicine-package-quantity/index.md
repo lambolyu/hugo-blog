@@ -1,6 +1,6 @@
 +++
 title = '藥品數量與包裝的換算'
-slug = 'Medicine-Package-Quantity'
+slug = '2023-09-medicine-package-quantity'
 date = 2023-09-20T10:05:30+08:00
 draft = false
 isCJKLanguage = true
@@ -85,7 +85,7 @@ df = df.sort_values(['speclevel','buildtime']).drop_duplicates('speclevel', keep
 df['specqty'] = df['specqty'].cumprod() #累乘
 ```
 核心方法就是 `cumprod()` ，預設參數是 `axis=0` 向下累乘，效果如下，第三行的 980 就是 1 * 28 * 35，而 19600 = 1 * 28 * 35 * 20：
-![Pandas cumprod()](/images/2023-09-df-cumprod.png#center)
+![Pandas cumprod()](df-cumprod.png#center)
 
 再將 DataFrame 轉換成列表 `[['箱', 19600], ['盒', 980], ['片', 28], ['顆', 1]]` ，操作起來比較直覺：
 ```python
@@ -177,7 +177,7 @@ function pkgcalc($code, $qty){
 }
 ```
 實際上應用如下，範例圖片還有用了 bootstrap 的 tooltips 設計：
-![PHP pkgcalc](/images/2023-09-php-pkgcalc.png#center)
+![PHP pkgcalc](php-pkgcalc.png#center)
 ***
 ## 資料表應用：大變小
 程式上線後一段時間，藥品數量的部分逐漸變成包裝量，但有些時候還是需要顆數來向院內的系統進行溝通。因此就必須逆著把程式寫回來。
@@ -289,11 +289,11 @@ $(function(){
 </script>
 ```
 結果如下：
-![PkgCalc Tool](/images/2023-09-PkgCalc-Tool.gif#center)
+![PkgCalc Tool](PkgCalc-Tool.gif#center)
 ***
 ## 資料表的修改
 資料表的的修改，直接用 php 寫一頁 UI 表單配合 MySQL 簡單操作資料表即可。
-![pkgcalc CRUD UI](/images/2023-09-pkgcalc-crud-ui.png#center)
+![pkgcalc CRUD UI](pkgcalc-crud-ui.png#center)
 
 比較困難的地方是要與**院內的藥品品項同步**。當有新增品項時，要隨著藥品種類帶入預設值，例如：咳嗽藥水的一級包裝名稱是「瓶」，針劑的一級包裝名稱是「支」等等。當院內品項被刪除時，原則上可以保留資料表中資料，只是不使用所以不影響。
 
@@ -325,9 +325,9 @@ for code in new_insert:
 ***
 ## 其他的應用實例
 ### 藥品盤點單的庫存數字
-![PkgCalc Intracounts](/images/2023-09-intracounts.png)
+![PkgCalc Intracounts](intracounts.png)
 ### 調藥系統的數量輸入介面
-![Transfer System](/images/2023-09-transfer-system.png#center)
+![Transfer System](transfer-system.png#center)
 當初會需要規格化藥品的包裝，主要是為了調藥系統的介面優化。初期調藥系統剛建立時，使用者需要輸入藥品的最小包裝量，以最上面的例子而言，如果使用者從藥庫調撥走 5 箱的 Bokey 膠囊，就要在調藥系統上輸入 58800 顆。
 
 規格化藥品包裝後，發現該項功能無論是小換算大或是大換算小，都能夠減輕一些工作效率，也能夠減輕事務員的經驗仰賴，無論是人力輪調或人力訓練都提升了不少好處。

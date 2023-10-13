@@ -1,6 +1,6 @@
 +++
 title = '藥品衛教單張自動更新'
-slug = 'medication-guidance-leaflet-auto-update'
+slug = '2023-11-medication-guidance-leaflet-auto-update'
 date = 2023-11-15T12:15:58+08:00
 draft = false
 isCJKLanguage = true
@@ -18,7 +18,7 @@ tags = ['Python','PHP','PDF','FTP','醫院','藥品','衛教單張','說明書',
 ***
 ## 衛教單張改良計畫
 本院資訊室目前提供的衛教單張，是當民眾前來向藥師索取時，藥師以院內系統列印該病人當天所有藥品的資訊，並且把所有資訊表列在 A4 大小的紙張上，每個字比螞蟻還小，而且字體是新細明體令人難以閱讀。
-![原本的衛教單張](/images/2023-10-mgl-before.png)
+![原本的衛教單張](mgl-before.png)
 
 　
 
@@ -74,7 +74,7 @@ from reportlab.lib.styles import ParagraphStyle
 pdf = canvas.Canvas('路徑\\檔名.pdf', pagesize=A4)
 ```
 這張新的 A4 紙在 reportlab 中的座標系統是以紙張左下角為原點，並以英吋作為刻度：
-![ReportLab Canvas Coordinates](/images/2023-10-reportlab-coord.png#center)
+![ReportLab Canvas Coordinates](reportlab-coord.png#center)
 
 
 　
@@ -109,7 +109,7 @@ pdf.restoreState()
 # 回覆設定，包含旋轉、設定顏色、設定字體至剛剛儲存的狀態
 ```
 預覽結果：
-{{< figure src="/images/2023-10-reportlab-demo-1.png" width="50%" alt="Reportlab-Demo" align="center" >}}
+{{< figure src="reportlab-demo-1.png" width="50%" alt="Reportlab-Demo" align="center" >}}
 
 　
 
@@ -127,7 +127,7 @@ pdf.drawImage(logo, x=50, y=720, width=80, height=80*aspect, mask='auto')
 # 這邊的座標 (50, 720) 是圖片左下角的對齊點
 ```
 預覽結果：
-{{< figure src="/images/2023-10-reportlab-demo-2.png" width="50%" alt="Reportlab-Demo" align="center" >}}
+{{< figure src="reportlab-demo-2.png" width="50%" alt="Reportlab-Demo" align="center" >}}
 
 　
 
@@ -137,7 +137,7 @@ pdf.setFont('kai', 32)
 pdf.drawString(x=160, y=750, text='某某醫院藥品資訊說明單張')
 ```
 預覽結果：
-{{< figure src="/images/2023-10-reportlab-demo-3.png" width="50%" alt="Reportlab-Demo" align="center" >}}
+{{< figure src="reportlab-demo-3.png" width="50%" alt="Reportlab-Demo" align="center" >}}
 
 　
 
@@ -161,7 +161,7 @@ pdf.line(x1=150, y1=120, x2=550, y2=120)
 # 從座標 (x1, y1) 畫一條線條到座標 (x2, y2)
 ```
 預覽結果：
-{{< figure src="/images/2023-10-reportlab-demo-4.png" width="50%" alt="Reportlab-Demo" align="center" >}}
+{{< figure src="reportlab-demo-4.png" width="50%" alt="Reportlab-Demo" align="center" >}}
 
 　
 
@@ -180,7 +180,7 @@ text.drawOn(pdf, x=166, y=374-text_h)
 # 因此座標 y 軸設定為 374-text_h 減去實際高度
 ```
 預覽結果：
-{{< figure src="/images/2023-10-reportlab-demo-6.png" width="60%" alt="Reportlab-Demo" align="center" >}}
+{{< figure src="reportlab-demo-6.png" width="60%" alt="Reportlab-Demo" align="center" >}}
 　
 
 
@@ -190,7 +190,7 @@ pdf.showPage()
 pdf.save()
 ```
 如此便能完成一種藥品的衛教單張，並儲存成指定的檔名。
-{{< figure src="/images/2023-10-reportlab-demo-fin.png" width="60%" alt="Reportlab-Demo" align="center" >}}
+{{< figure src="reportlab-demo-fin.png" width="60%" alt="Reportlab-Demo" align="center" >}}
 
 ***
 ### threading.Thread
