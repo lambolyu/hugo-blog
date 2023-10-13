@@ -10,7 +10,7 @@ categories = ['Data Visualization']
 tags = ['Python','MySQL','Database','MariaDB','Pandas','DataFrame','資料庫','時間序列','time series','date_range','merge','groupby','Grouper','pivot']
 +++
 
-在[前幾篇](https://lambolyu.netlify.app/2023/09/medicine-consumption-data-visualization/)有提過，我們利用 python 彙整處方資料至資料庫中，製作視覺化圖表便於讓藥師進行決策。
+在[前幾篇](https://lamzy.net/2023-09-medicine-consumption-data-visualization/)有提過，我們利用 python 彙整處方資料至資料庫中，製作視覺化圖表便於讓藥師進行決策。
 
 但是這功能卻僅限於***已經知道特定藥品***的異常，輸入該藥品名稱，才會進入該藥品的視覺化圖表進而了解異常的區間或異常的情形。
 
