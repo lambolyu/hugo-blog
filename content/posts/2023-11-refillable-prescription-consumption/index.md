@@ -9,3 +9,13 @@ TocOpen = true
 categories = ['Python','PHP']
 tags = []
 +++
+***
+## 連續處方箋是什麼
+***
+## 為什麼要算餘量
+***
+## 連續處方箋的餘量計算規則
+***
+## 程式實作
+### Python
+### PHP
