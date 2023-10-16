@@ -11,7 +11,7 @@ tags = ['Python','PHP','PDF','FTP','醫院','藥品','衛教單張','說明書',
 +++
 
 醫院領到的藥品通常都是一個藥袋裝著一種藥品，按照[藥師法第 19 條規定](https://law.moj.gov.tw/LawClass/LawSingle.aspx?pcode=L0030066&flno=19)，藥袋上必須印有姓名、性別、藥品名稱、劑量、數量、用法、作用或適應症、警語或副作用、藥局名稱及藥師姓名、調劑日期的標示。
-{{< figure src="https://taipei.tzuchi.com.tw/wp-content/uploads/2021/09/20210908-5.jpg" width="60%" alt="台北慈濟藥袋" align="center" >}}
+{{< figure src="https://taipei.tzuchi.com.tw/wp-content/uploads/2021/09/20210908-5.jpg" width="60%" alt="台北慈濟藥袋" title="台北慈濟醫院藥袋" align="center" >}}
 
 然而藥品的說明與注意事項詳細謄寫起來通常是一個藥袋的大小放不完的，所以每家醫療機構都會製作「藥品衛教單張」，額外對藥袋內容不足的地方加以補充說明。
 
