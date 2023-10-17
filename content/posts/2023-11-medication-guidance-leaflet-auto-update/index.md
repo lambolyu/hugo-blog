@@ -241,6 +241,97 @@ for t in thread_list:
 如此就會將藥品品項檔切成八個部分，分別製作 pdf 檔輸出，效率會比較高一點。
 
 > Python 多工處理分成多線程 (Multithreading) 和多進程 (Multiprocessing)，可以參考這兩篇文章：[AsyncIO, Threading, and Multiprocessing in Python](https://ivankao.ichweblog.com/blog/706/)、[python thread multiprocess 比較總整理](https://www.wongwonggoods.com/all-posts/python/python_parellel/python-thread-multiprocess/)。本文中的 pdf 製作也用過多進程，與多線程相比反而慢了一些，因此用多線程足矣。
+***
+
+## PHP 製作 pdf
+### setasign\Fpdi
+最一開始其實是希望醫院官方網站可以讓我直接上傳 php ，民眾連結網址利用 URL 變數直接形成 pdf 檔。資訊室一開始什麼都沒說，在我辛辛苦苦研究出來後，資訊室才說不行，~~有夠讚 ^^~~，所以我直接把程式碼擺上來就不另外說明了。
+
+安裝 [Composer](https://getcomposer.org/) ，我當初是直接使用官方的 exe 檔安裝的， Windows 作業平台直接無痛使用 exe 就好。
+
+接著新增一個資料夾在網頁伺服器的根目錄裡面，例如 `伺服器根目錄\mgl\` ，並且確認可以使用 `http://localhost/mgl/` 連到資料夾中。然後在資料夾裡面建立一個 `composer.json` 檔案，內容是：
+```json
+{
+    "require": {
+        "tecnickcom/tcpdf": "6.3.*",
+        "setasign/fpdi": "^2.0"
+    }
+}
+```
+套件的 github 在[這裡](https://github.com/Setasign/FPDI)，另外使用 tcpdf 是為了產生 UTF-8 的中文字。
+
+使用指令把 php 套件下載下來：
+```powershell
+composer install
+```
+
+建立 php 檔案，例如 `伺服器根目錄\mgl\mgl.php`，引入套件：
+```php
+<?php
+use setasign\Fpdi\Tcpdf\Fpdi;
+require_once("vendor/autoload.php");
+$pdf = new Fpdi();
+``` 
+
+新增頁面， php 套件預設的座標系以左上角為原點， x 軸正值往右， y 軸正值往下：
+```php
+$pdf->AddPage();
+```
+
+新增 pdf 檔案資訊：
+```php
+$pdf->SetAuthor("某某醫院藥劑科");
+$pdf->SetTitle("某某醫院藥品資訊說明單張");
+$pdf->SetSubject("某某醫院藥品資訊說明單張");
+
+$pdf->setPrintHeader(false);
+$pdf->setPrintFooter(false);
+//頁首頁尾會預設有兩條直線，很醜，不用這個功能。
+```
+
+浮水印製作：
+```php
+$pdf->StartTransform();
+$pdf->SetFont("kai", "", 72);
+$pdf->SetTextColor(240, 240, 240);
+$pdf->Rotate(45, 100, 200);
+$pdf->Text($w=50, $h=150, "某某醫院藥劑科");
+$pdf->StopTransform();
+$pdf->SetTextColor(0, 0, 0);
+```
+
+貼上圖片：
+```php
+$logo = "路徑\\hospital.png";
+$pdf->Image($logo, $x=35, $y=10, $w=23, $h=20, $type="png", $link="", $align="T", $resize=true, $dpi=300, $palign="");
+```
+
+加入標題：
+```php
+$pdf->SetFont("kai", "", 24);
+$pdf->MultiCell($w=180, $h=0, "某某醫院藥品資訊說明單張", $border=0, $align="L", $fill=false, $ln=1, $x=67, $y=10, $reseth=true, $stretch=0, $ishtml=false, $autopadding=true, $maxh=0, $valign="T", $fitcell=false);
+```
+
+加入形狀和線條的設計：
+```php
+$pdf->SetFillColor($R=241, $G=237, $B=248);
+$pdf->RoundedRect($x=10, $y=35, $w=30, $h=240, $r=3.50, "1111", "F");
+$pdf->SetDrawColor($R=198, $G=182, $B=227);
+$pdf->Line($x1=40, $y1=35, $x2=200, $x2=35);
+$pdf->Line($x1=40, $y1=90, $x2=200, $x2=90);
+$pdf->Line($x1=40, $y1=120, $x2=200, $x2=120);
+$pdf->Line($x1=40, $y1=150, $x2=200, $x2=150);
+$pdf->Line($x1=40, $y1=190, $x2=200, $x2=190);
+$pdf->Line($x1=40, $y1=220, $x2=200, $x2=220);
+$pdf->Line($x1=40, $y1=250, $x2=200, $x2=250);
+```
+
+使用 `MultiCell` 方法跟 `reportlab.platypus` 一樣會有寬度的限制，文字在裡面可以直接換行，不會有過長的情形。
+
+所有文字依序貼入後，完成並輸出：
+```php
+$pdf->Output("mgl.pdf", "I");
+```
 
 ***
 ## FTP 上傳檔案

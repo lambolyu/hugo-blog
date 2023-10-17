@@ -177,6 +177,12 @@ ALTER TABLE `consmp_字首`
 COMMIT;
 ```
 
+另外因為 python 要操作 MySQL ，也必須先安裝兩個函式庫：
+```powershell
+pip install SQLAlchemy
+pip install mysql-connector-python
+```
+
 剛剛合併的 DataFrame 可以用下面的方式分割後存入 MySQL 資料表中：
 ```python
 import datetime #日期時間
