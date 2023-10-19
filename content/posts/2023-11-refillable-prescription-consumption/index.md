@@ -7,7 +7,7 @@ isCJKLanguage = true
 showToc = true
 TocOpen = true
 categories = ['Python','PHP']
-tags = []
+tags = ['Python','PHP','處方箋','領藥','連續處方箋','慢性病連續處方箋','慢箋','連處','健保','餘量','缺藥','社區藥局','固定客戶','好客戶','固定病人','好病人','sqlalchemy','Timedelta','drop_duplicates','last','sum','write','iterrows','json_encode','usort','application/vnd.ms-excel','excel']
 +++
 民眾到醫院看診，醫師會依照民眾的病情開立藥品，給予「處方箋」，讓民眾到醫院的領藥處，或是醫院外的藥局領藥服用。
 {{< figure src="https://exdep.edah.org.tw/ph2/images/pic/OPD_prescription.png" width="80%" alt="義大醫院處方箋" title="義大醫院處方箋樣張" align="center" >}}
