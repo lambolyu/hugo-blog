@@ -4,5 +4,5 @@ export default async (req) => {
 }
 
 export const config = {
-    schedule: "@weekly"
+    schedule: "@daily"
 }
