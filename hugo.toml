@@ -131,7 +131,7 @@ xhtml = false
 codeFences = true
 guessSyntax = true
 lineNos = false
-style = "monokai"
+style = 'monokai'
 
 [[menu.main]]
 identifier = "archives"

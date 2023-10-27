@@ -419,7 +419,7 @@ img.in-text {
 }
 
 .post-content pre code {
-    max-height: 30em;
+    max-height: 150em;
 }
 
 .post-content pre code::-webkit-scrollbar {
