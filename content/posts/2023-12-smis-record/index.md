@@ -1,7 +1,7 @@
 +++
 title = '智慧防疫物資管理系統：紀錄'
 slug = '2023-12-mrdss-record'
-date = 2023-12-08T14:11:53+08:00
+date = 2023-12-16T14:11:53+08:00
 draft = false
 isCJKLanguage = true
 showToc = true

@@ -101,8 +101,9 @@
 }
 
 .post-content blockquote p {
-    margin-top: 0px;
-    margin-bottom: var(--content-gap);
+    margin: 0px;
+    font-size: smaller;
+    color: var(--secondary);
 }
 
 .post-content ol,
@@ -230,8 +231,11 @@
 }
 
 .post-content blockquote {
+    background-color: #fff;
     margin: 20px 0;
-    padding: 0 14px;
+    padding: 7px 14px;
+    box-shadow: 1px 1px 3px #ddd;
+    border-radius: 0 5px 5px 0;
     border-inline-start: 3px solid var(--primary);
 }
 
