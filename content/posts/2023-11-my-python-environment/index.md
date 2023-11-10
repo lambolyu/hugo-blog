@@ -189,5 +189,35 @@ tags = []
 
 ***
 ## 關於 Anaconda
+{{< figure src="https://prod-backend-company-uploads-transcend-io.s3.amazonaws.com/8d6dc27b-6eef-4afc-8e75-1e1ac922e35f/e8d51866-cab8-4ea9-9ab7-b72dea449a4f" width="20%" alt="Anaconda-logo" align="center" >}}
+約莫在 2020 年前後，所有的 Python 入門教學文不約而同的都請初學者使用 Anaconda 這套組合，最近可能熱度下降了，這個組合會幫忙安裝 python 以及各種關於資料科學等等的套件都會預先安裝，另外也會安裝他自有或是 pycharm 、瀏覽器版本的 Jupyter 等編輯器。另外有別於原生版的 pip ， Anaconda 安裝套件的方法改為自有的 `conda 套件名稱` ，應該是可以基於 Anaconda 自身的套件上在加以安裝或修改的版本。
+
+所以等於安裝一個 Anaconda ，就可以少設定 Python 的安裝位置，不用自行安裝 pip 套件，不用自行安裝 VS code 。如意算盤打好之後發現如果要做點更深入的開發，例如安裝 Tensorflow 、建立虛擬環境，或是更新版本都會碰到不少的問題；更甚至在 Anacoda 之下又安裝了原生版的 Python ，有可能導致兩個都無法使用。
+
+不過如果是習慣 R 的使用者，因為介面聽說和 R 都很像，我個人是不知道，但或許是個很好上手的組合包也說不定。
+
+![Anaconda-demo](https://miro.medium.com/v2/resize:fit:1400/format:webp/1*LOyzpLEM7O9qHDKoruqoXQ.png)
+
+***
+## 關於 Jupyter
+![Jupyter-logo](https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Jupyter_logo.svg/207px-Jupyter_logo.svg.png#center)
+這也是一個大家都推薦新手的安裝的東西，它本身是一個 python 的套件，並不是集成式組合，也就說要先完成 pytohn 的安裝後，接著在 cmd 或 powershell 下指令 `pip install notebook` 會開始安裝以 ipython 為名的相關套件，安裝完畢之後鍵入 `jupyter notebook` 指令就會直接以瀏覽器開啟介面：
+{{< figure src="jupyter-demo-1.png" width="60%" alt="Jupyter-Notebook-Demo" align="center" >}}
+
+把程式輸入在 [] 後面的表單欄位中，按下 `ctrl+Enter` 就可以單行執行，某些寫法中可以省略 `print()` 直接在欄位中寫入變數名，就可以直接顯示變數內容。
+
+如果是 Pandas 的 DataFrame 會直接用表格顯示內容，一目了然：
+![Jupyter-Notebook-Demo](jupyter-demo-2.png#center)
+
+　
+
+另外行跟行之間也是具有因果關係的，例如我們在第 13 行輸入 import pandas as pd 之前，就必須安裝 Pandas 的套件，如同第 11 行使用 `!pip install pandas` ，前面會有一個驚嘆號是 Jupyter 介面的特有寫法：
+{{< figure src="jupyter-demo-3.png" width="70%" alt="Jupyter-Notebook-Demo" align="center" >}}
+
+　
+
+總之這個介面適合給，看到一片黑、只能輸入指令又沒有滑鼠視窗，會覺得腦中一片空白的使用者使用。不過這個程式寫出來的附檔名是 `ipynb` ，如果要直接執行，必須在 jupyter 介面匯出成 `py` 檔，不然預設執行的程式應該是瀏覽器。
+
 ***
 ## 關於 Google Colab
+Colab 是 Google 提供的一個線上版的 Jupyter ，預設的儲存位置是自己的 Google 雲端硬碟。使用這個好處是所有環境都會建立在 Google 提供的環境中
