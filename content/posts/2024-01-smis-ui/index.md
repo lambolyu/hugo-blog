@@ -2,7 +2,7 @@
 title = '智慧防疫物資管理系統：介面'
 slug = '2024-01-smis-ui'
 date = 2024-01-04T13:07:58+08:00
-draft = flase
+draft = false
 isCJKLanguage = true
 showToc = true
 TocOpen = true
