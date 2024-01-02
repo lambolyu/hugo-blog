@@ -30,10 +30,32 @@ tags = []
 
 ***
 ## 定量訂購法中的參數設置
-因此本院藥庫採行的訂購模式是以定量訂購法為主，而定量訂購法有兩個重要的參數需要設置，分別是請購點庫存與固定訂單量。
+因此本院藥庫採行的訂購模式是以定量訂購法為主，而定量訂購法有兩個重要的參數需要設置，分別是請購點庫存與固定採購量。目前依照經驗，本院將請購點庫存訂為每個藥品過去三個月的每週使用量的最大值，在本院又稱為安全庫存量（雖然定義上與實際安全庫存量不符）；而固定採購量則是依照 ABC 分類法， A 類藥品訂為過去三個月的每週使用量的平均值， B 類藥品為過去一年的每月使用量平均值的二分之一， C 類藥品為過去一年的每月使用量的平均值，並且固定採購量需要參考出貨包裝數量，所以數值應該是設定用量往下取出貨包裝數量。本院的固定採購量又稱為採購基準量。
+
+{{< figure src="chgh_qom.png" width="80%" alt="Quantitative Order Method" align="center" >}}
+- 安全庫存量：週用量最大值
+- A 類藥品採購基準量：週用量 (7天)
+- B 類藥品採購基準量：雙週用量 (14天)
+- C 類藥品採購基準量：月用量 (28天)
+
+計算方法交給 python ，計算每個藥品週用量最大值和週用量平均值：
+```python
+import numpy as np
+import pandas as pd
+import mysql.connector
+from sqlalchemy import create_engine
+
+def weekmax_weekmean(drug):
+    # 時間區間
+    start_day = (pd.Timestamp('today') - pd.tseries.offsets.MonthBegin(13)).strftime('%Y%m%d')
+    today = pd.Timestamp('today').strftime('%Y%m%d')
+
+```
+
+> Pandas 的 to_datetime('today') 在某個版本之後正式失效，須改以 Timestamp('today') 。
 
 ***
-## 採購量的形成
+## 需進行採購藥品的清單
 ***
 ## 未來採購量的預測
 ***

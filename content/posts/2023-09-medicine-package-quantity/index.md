@@ -76,7 +76,7 @@ code = 'BOK001'
 qty = 58800
 
 sql = f"SELECT * FROM pkgspec WHERE `code` = '{code}' ORDER BY `speclevel`,`buildtime` ASC"
-engine = create_engine('mysql+mysqlconnector://...')
+engine = create_engine('mysql+mysqlconnector://使用者名稱:密碼@伺服器存在位置IP:埠號/資料庫名稱')
 df = pd.read_sql(sql, con=engine)
 
 df = df.sort_values(['speclevel','buildtime']).drop_duplicates('speclevel', keep='last')
@@ -302,7 +302,7 @@ $(function(){
 import pandas as pd
 import mysql.connector
 from sqlalchemy import create_engine
-engine = create_engine('mysql+mysqlconnector://...')
+engine = create_engine('mysql+mysqlconnector://使用者名稱:密碼@伺服器存在位置IP:埠號/資料庫名稱')
 df = pd.read_excel('院內系統匯出的藥品品項.xls', dtype=str)
 pkgspec = pd.read_sql('SELECT DISTINCT `code` FROM `pkgspec`', con=engine)
 ```

@@ -51,7 +51,7 @@ import pandas as pd
 import numpy as np
 import mysql.connector
 from sqlalchemy import create_engine
-engine = create_engine('mysql+mysqlconnector://~')
+engine = create_engine('mysql+mysqlconnector://使用者名稱:密碼@伺服器存在位置IP:埠號/資料庫名稱')
 
 code = '藥品代碼'
 
@@ -182,7 +182,7 @@ def consmp(drug):
     # 查詢藥品用量資料
     capital = '0' if drug[0].isnumeric() else drug[0]
     sql = f"SELECT `date`,SUM(`total`) AS `qty` FROM `consmp_{capital}` WHERE `drug` = '{code}' AND `date` >= '{startday}' GROUP BY `date`"
-    engine = create_engine('mysql+mysqlconnector://root:Medcine5640!@192.168.12.215:3307/consmp')
+    engine = create_engine('mysql+mysqlconnector://使用者名稱:密碼@伺服器存在位置IP:埠號/資料庫名稱')
     # 將 sql 讀取成 df
     df = pd.read_sql(sql=sql, con=engine)
     df['藥品代碼'] = drug

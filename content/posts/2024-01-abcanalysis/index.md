@@ -162,7 +162,7 @@ import pandas as pd
 import numpy as np
 import mysql.connector
 from sqlalchemy import create_engine
-engine = create_engine('mysql+mysqlconnector://帳號:密碼@位置:埠號/資料表名稱')
+engine = create_engine('mysql+mysqlconnector://使用者名稱:密碼@伺服器存在位置IP:埠號/資料庫名稱')
 ```
 
 　

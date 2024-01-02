@@ -169,7 +169,7 @@ code = 'PLA001'
 
 查詢 MySQL 取得好病人區間 168 天的資料：
 ```python
-engine = create_engine('mysql+mysqlconnector://帳號:密碼@位置:埠號/consmp')
+engine = create_engine('mysql+mysqlconnector://使用者名稱:密碼@伺服器存在位置IP:埠號/consmp')
 sql = f"SELECT `pt`, `date`, `total`, `subject`, `doctor`, `refill` FROM `consmp_{capital}` WHERE `drug` = '{code}' AND `date` >= {gooddate} AND `refill` <> 'N/A'"
 df = pd.read_sql(sql, engine)
 ```
