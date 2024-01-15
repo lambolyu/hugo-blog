@@ -78,8 +78,110 @@ date,consumption
 
 這樣的數字其實沒什麼意義，因為忽略了一些大前提，我們以平均值和標準差來預測未來的數值時，母體數值群 ( 也就是被用來計算的過去資料 ) 必須呈現常態分佈，並且資料必須平穩集中。
 
+我們引入整年份的資料，並利用 `Shapiro-Wilk test` 來對資料進行常態分佈的檢定：
+```python
+import pandas as pd
+import scipy.stats
+
+df = pd.read_csv('整年度某個藥品的資料.csv')
+tests = scipy.stats.shapiro(df['consumption'].tolist())
+```
+
+執行後可以得到這個結果：
+```powershell
+ShapiroResult(statistic=0.8714791536331177, pvalue=6.371240215925978e-17)
+```
+`Shapiro-Wilk test` 的虛無假設 H0 是資料屬於常態分佈，如果結果的 pvalue 小於 0.05 ，則會拒絕虛無假設；以我們的資料來說， pvalue = 6.371240215925978e-17 遠小於 0.05 ，因此我們可以確定這個資料不屬於常態分佈，當然以平均值和標準差來預測未來的數值就會出現離譜的偏差。
+
 ### 資料的降採樣
 
+那下一步該怎麼做？
+
+藉由剛剛的圖形稍微觀察到，醫院藥品的耗用情形大致是以每七天的一周期的方式波動，禮拜六日因為醫師休診醫院放假，耗用量就幾乎為零，因此我們可以以每七天重新對資料採樣一次，大概有點類似降採樣 (Down Sampling) 的概念。
+
+於是我們可以將剛剛的資料在多加一行 (column) 的星期幾的資料，如此就可以利用 `.loc()` 將特定星期的資料分出來：
+```python
+df['weekday'] = pd.to_datetime(df['date'], format='%Y%m%d').dt.strftime('%w')
+# 0=星期日, 1=星期一, 2=星期二 ..., 6=星期六
+
+df_w0 = df.loc[df['weekday']=='0']
+...
+df_w6 = df.loc[df['weekday']=='6']
+```
+
+我們來看看每七天重新對資料採樣一次的 `Shapiro-Wilk test` 的 pvalue 有沒有下降：
+```python
+for i in range(0, 7):
+    print(f'w{i}: ', end='')
+    w = df.loc[df['weekday']==str(i)]
+    tests_w = scipy.stats.shapiro(w['consumption'].tolist())
+    print(tests_w)
+```
+
+結果為：
+```powershell
+w0: ShapiroResult(statistic=0.9827414155006409, pvalue=0.6361146569252014)
+w1: ShapiroResult(statistic=0.8977280259132385, pvalue=0.00030909766792319715)
+w2: ShapiroResult(statistic=0.7871079444885254, pvalue=3.008760245393205e-07)
+w3: ShapiroResult(statistic=0.7868373394012451, pvalue=2.966743011256767e-07)
+w4: ShapiroResult(statistic=0.816359281539917, pvalue=1.225354139933188e-06)
+w5: ShapiroResult(statistic=0.7929207682609558, pvalue=3.3607966543058865e-07)
+w6: ShapiroResult(statistic=0.9263978004455566, pvalue=0.002929063281044364)
+```
+
+可以看到 pvalue 明顯大了許多，甚至禮拜日 w0 的資料已經屬於常態分佈了。
+
+於是我接著將資料由一年份開始，檢查 `Shapiro-Wilk test` 結果，如果不屬於常態分佈，就將頭七天扣掉，以此將資料逼近現在的時間，這麼一來我就可以得到資料從第幾週的範圍開始選取會是常態分布：
+```python
+result = {}
+for i in range(0, 7):
+    df = pd.read_csv('整年度某個藥品的資料.csv')
+    df['weekday'] = pd.to_datetime(df['date'], format='%Y%m%d').dt.strftime('%w')
+    n = 52
+    while True:
+        df = df.iloc[-7*n:,:]
+        w = df.loc[df['weekday']==str(i)]
+        tests_w = scipy.stats.shapiro(w['consumption'].tolist())
+        pvalue = tests_w.pvalue
+        if (pvalue <= 0.05) & (n>0):
+            n -= 1
+        else:
+            result[f'w{i}'] = n
+            break
+```
+
+並且結合之前說過的平均值和標準差來對未來資料進行預測，這邊我使用平均值加上 0.1 倍的標準差，消耗量的資料寧可高估也不要低估：
+```python
+result = {}
+for i in range(0, 7):
+    df = pd.read_csv('整年度某個藥品的資料.csv')
+    df['weekday'] = pd.to_datetime(df['date'], format='%Y%m%d').dt.strftime('%w')
+    n = 52
+    while True:
+        df = df.iloc[-7*n:,:]
+        w = df.loc[df['weekday']==str(i)]
+        tests_w = scipy.stats.shapiro(w['consumption'].tolist())
+        pvalue = tests_w.pvalue
+        if (pvalue <= 0.05) & (n>0):
+            n -= 1
+        else:
+            #result[f'w{i}'] = n
+            result[f'w{i}'] = w['consumption'].mean() + 0.1*w['consumption'].std(ddof=0)
+            break
+```
+
+結果為：
+```powershell
+{'w0': 140.89182907442253,
+ 'w1': 8515.939732601033,
+ 'w2': 8195.225040738227,
+ 'w3': 8879.406632279424,
+ 'w4': 7250.917852989266,
+ 'w5': 7158.895150689425,
+ 'w6': 1871.8293178917595}
+```
+
+這樣就可以利用簡單的數學模型計算每個 weekday 的用量。
 
 ***
 ## 程式流程規劃與實作
